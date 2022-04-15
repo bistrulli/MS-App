@@ -107,7 +107,7 @@ class jvm_sys(system_interface):
             #                  '--cpuEmu', "%d" % (cpuEmu), '--jedisHost', 'localhost',
             #                  "--tier2Host", "localhost"])
             
-            subprocess.Popen([javaCmd,
+            subprocess.Popen(["sudo",javaCmd,
                              "-Xmx15G", "-Xms15G",
                              "-Djava.compiler=NONE", "-jar", "-Xint",
                              '%sMS-Tier1/target/MS-Tier1-0.0.1-jar-with-dependencies.jar' % (self.sysRootPath),
