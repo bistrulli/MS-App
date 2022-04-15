@@ -107,7 +107,7 @@ class jvm_sys(system_interface):
             #                  '--cpuEmu', "%d" % (cpuEmu), '--jedisHost', 'localhost',
             #                  "--tier2Host", "localhost"])
             
-            subprocess.Popen(["sudo",javaCmd,
+            subprocess.Popen([javaCmd,
                              "-Xmx15G", "-Xms15G",
                              "-Djava.compiler=NONE", "-jar", "-Xint",
                              '%sMS-Tier1/target/MS-Tier1-0.0.1-jar-with-dependencies.jar' % (self.sysRootPath),
@@ -134,7 +134,7 @@ class jvm_sys(system_interface):
                    listOfProcessObjects.append(proc)
            except (psutil.NoSuchProcess, psutil.AccessDenied , psutil.ZombieProcess):
                pass
-        if(len(listOfProcessObjects) < 1):
+        if(len(listOfProcessObjects) != 1):
             print(len(listOfProcessObjects))
             raise ValueError("process %s not found!" % processName)
         return listOfProcessObjects;
@@ -376,7 +376,7 @@ if __name__ == "__main__":
             
             g = Client("localhost:11211")
             
-            g.set("t1_hw", "%f" %(5))
+            #g.set("t1_hw", "%f" %(5))
             
             X = []
             Client_rt=None
