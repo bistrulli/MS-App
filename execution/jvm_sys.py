@@ -352,11 +352,11 @@ class jvm_sys(system_interface):
             
 if __name__ == "__main__":
     try:
-        isCpu = False
+        isCpu = True
         g = None
         jvm_sys = jvm_sys("../", isCpu)
         
-        W=[150]
+        W=[5]
         rtExp=np.zeros([len(W),2])
         rtCI=np.zeros([len(W),2])
         
@@ -369,7 +369,7 @@ if __name__ == "__main__":
             
             g = Client("localhost:11211")
             
-            g.set("t1_hw", "%f" %(6))
+            g.set("t1_hw", "%f" %(5))
             
             X = []
             Client_rt=None
