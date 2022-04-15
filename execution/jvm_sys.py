@@ -134,7 +134,7 @@ class jvm_sys(system_interface):
                    listOfProcessObjects.append(proc)
            except (psutil.NoSuchProcess, psutil.AccessDenied , psutil.ZombieProcess):
                pass
-        if(len(listOfProcessObjects) != 1):
+        if(len(listOfProcessObjects) < 1):
             print(len(listOfProcessObjects))
             raise ValueError("process %s not found!" % processName)
         return listOfProcessObjects;
