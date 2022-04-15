@@ -76,8 +76,8 @@ class jvm_sys(system_interface):
     
     def startSys(self):
         
-        if(self.isCpu):
-            self.initCgroups()
+        # if(self.isCpu):
+        #     self.initCgroups()
         
         cpuEmu = 0 if(self.isCpu) else 1
         
@@ -99,8 +99,15 @@ class jvm_sys(system_interface):
             self.waitTier1()
             self.sys.append(self.findProcessIdByName("MS-Tier1-0.0.1")[0])
         else:
-            subprocess.Popen(["cgexec", "-g", "cpu:t1", "--sticky", 
-                              javaCmd,
+            # subprocess.Popen(["cgexec", "-g", "cpu:t1", "--sticky", 
+            #                   javaCmd,
+            #                  "-Xmx15G", "-Xms15G",
+            #                  "-Djava.compiler=NONE", "-jar", "-Xint",
+            #                  '%sMS-Tier1/target/MS-Tier1-0.0.1-jar-with-dependencies.jar' % (self.sysRootPath),
+            #                  '--cpuEmu', "%d" % (cpuEmu), '--jedisHost', 'localhost',
+            #                  "--tier2Host", "localhost"])
+            
+            subprocess.Popen([javaCmd,
                              "-Xmx15G", "-Xms15G",
                              "-Djava.compiler=NONE", "-jar", "-Xint",
                              '%sMS-Tier1/target/MS-Tier1-0.0.1-jar-with-dependencies.jar' % (self.sysRootPath),
