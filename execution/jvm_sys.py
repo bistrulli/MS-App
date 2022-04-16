@@ -308,7 +308,7 @@ class jvm_sys(system_interface):
             
             print("####%s####"%(rtLogName))
             print(CI[0]/10**9,CI[1]/10**9)
-            print(np.mean(Bm)/10**9,(CI[1]-np.mean(Bm))*100/np.mean(Bm),(CI[1]-np.mean(Bm)))
+            print(np.mean(Bm)/10**9,(CI[1]-np.mean(Bm))*100/np.mean(Bm),(CI[1]-np.mean(Bm))/10**9)
             
             return [np.mean(Bm),CI]
             
@@ -363,7 +363,7 @@ if __name__ == "__main__":
         g = None
         jvm_sys = jvm_sys("../", isCpu)
         
-        W=[1,40,50,60,70,80,90,100,110]
+        W=[4,40,50,60,70,80,90,100,110]
         rtExp=np.zeros([len(W),2])
         rtCI=np.zeros([len(W),2])
         
@@ -387,7 +387,7 @@ if __name__ == "__main__":
                 
                 Client_rt=jvm_sys.batchMeansRT("Client_rtlog.txt",N=30,K=30);
                 if(Client_rt):
-                    e=(Client_rt[1][1]-Client_rt[0])
+                    e=(Client_rt[1][1]-Client_rt[0])/10**9
                     if(e>10**-3):
                         isConverged=isConverged and False
                 else:
@@ -395,7 +395,7 @@ if __name__ == "__main__":
                         
                 T1_rt=jvm_sys.batchMeansRT("t1_rtlog.txt",N=30,K=30);
                 if(T1_rt):
-                    e=(T1_rt[1][1]-T1_rt[0])
+                    e=(T1_rt[1][1]-T1_rt[0])/10**9
                     if(e>10**-3):
                         isConverged=isConverged and False
                 else:
