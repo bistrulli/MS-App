@@ -308,7 +308,7 @@ class jvm_sys(system_interface):
             
             print("####%s####"%(rtLogName))
             print(CI[0]/10**9,CI[1]/10**9)
-            print(np.mean(Bm)/10**9,(CI[1]-np.mean(Bm))*100/np.mean(Bm))
+            print(np.mean(Bm)/10**9,(CI[1]-np.mean(Bm))*100/np.mean(Bm),(CI[1]-np.mean(Bm)))
             
             return [np.mean(Bm),CI]
             
