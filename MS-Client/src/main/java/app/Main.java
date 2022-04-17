@@ -85,7 +85,7 @@ public class Main {
 		HashMap<String, Class> clientEntries = new HashMap<String, Class>();
 		HashMap<String, Long> clientEntries_stimes = new HashMap<String, Long>();
 		clientEntries.put("think", Client.class);
-		clientEntries_stimes.put("think", 1000l);
+		clientEntries_stimes.put("think", 300l);
 		final SimpleTask client = new SimpleTask(clientEntries, clientEntries_stimes, Main.initPop, "Client",
 				Main.jedisHost, null,500l);
 		Client.setTier1Host(Main.tier1Host);

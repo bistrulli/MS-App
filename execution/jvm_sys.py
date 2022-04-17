@@ -363,7 +363,7 @@ if __name__ == "__main__":
         g = None
         jvm_sys = jvm_sys("../", isCpu)
         
-        W=[40,50,60,70,80,90,100,110]
+        W=[4,10,20,30,40,50]
         rtExp=np.zeros([len(W),2])
         rtCI=np.zeros([len(W),2])
         
