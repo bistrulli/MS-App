@@ -387,16 +387,16 @@ if __name__ == "__main__":
                 
                 Client_rt=jvm_sys.batchMeansRT("Client_rtlog.txt",N=30,K=30);
                 if(Client_rt):
-                    e=(Client_rt[1][1]-Client_rt[0])/10**9
-                    if(e>10**-3):
+                    e=(Client_rt[1][1]-Client_rt[0])/Client_rt[0]
+                    if(e>0.01):
                         isConverged=isConverged and False
                 else:
                     isConverged=isConverged and False
                         
                 T1_rt=jvm_sys.batchMeansRT("t1_rtlog.txt",N=30,K=30);
                 if(T1_rt):
-                    e=(T1_rt[1][1]-T1_rt[0])/10**9
-                    if(e>10**-3):
+                    e=(T1_rt[1][1]-T1_rt[0])/T1_rt[0]
+                    if(e>0.01):
                         isConverged=isConverged and False
                 else:
                     isConverged=isConverged and False
