@@ -441,13 +441,18 @@ if __name__ == "__main__":
         N=30
         K=30
         
-        W=[4,8,12,16,20,24,28,32,36,40,44,48,52,56,60]
+        #W=[4,8,12,16,20,24,28,32,36,40,44,48,52,56,60]
         rtExp=np.zeros([len(W),2])
         tExp=np.zeros([len(W),2])
         rtCI=np.zeros([len(W),2])
         tCI=np.zeros([len(W),2])
+        W=[]
+        NC=[]
         
-        for w in range(len(W)) :
+        for w in range(10) :
+            
+            NC.append(3)
+            W.append(np.random.randint(low=4,high=50))
             
             sys = jvm_sys("../", isCpu)
             
@@ -457,7 +462,7 @@ if __name__ == "__main__":
             isConverged=False
             
             sys.startSys()
-            sys.startClient(W[w])
+            sys.startClient(W[-1])
             
             #g = Client("localhost:11211")
             #g.set("t1_hw", "%f" %(5))
@@ -485,7 +490,7 @@ if __name__ == "__main__":
             sys.stopClient()
             sys.stopSystem()
             
-            savemat("./data/2tier.mat", {"RTm":rtExp,"rtCI":rtCI,"Tm":tExp,"tCI":tCI,"Cli":W})
+            savemat("./data/2tier2.mat", {"RTm":rtExp,"rtCI":rtCI,"Tm":tExp,"tCI":tCI,"Cli":W,"NC":NC})
         
         
             
