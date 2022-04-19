@@ -450,7 +450,7 @@ if __name__ == "__main__":
         W=[]
         NC=[]
         
-        for w in range(W.shape[0]) :
+        for w in range(len(W)) :
             
             NC.append([np.inf,3])
             
