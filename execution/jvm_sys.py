@@ -442,6 +442,7 @@ if __name__ == "__main__":
         K=30
         
         #W=[4,8,12,16,20,24,28,32,36,40,44,48,52,56,60]
+        W=np.random.randint(low=4,high=50,size=[10])
         rtExp=np.zeros([len(W),2])
         tExp=np.zeros([len(W),2])
         rtCI=np.zeros([len(W),2])
@@ -449,10 +450,9 @@ if __name__ == "__main__":
         W=[]
         NC=[]
         
-        for w in range(10) :
+        for w in range(W.shape[0]) :
             
-            NC.append(3)
-            W.append(np.random.randint(low=4,high=50))
+            NC.append([np.inf,3])
             
             sys = jvm_sys("../", isCpu)
             
@@ -462,7 +462,7 @@ if __name__ == "__main__":
             isConverged=False
             
             sys.startSys()
-            sys.startClient(W[-1])
+            sys.startClient(W[w,0])
             
             #g = Client("localhost:11211")
             #g.set("t1_hw", "%f" %(5))
