@@ -462,7 +462,7 @@ if __name__ == "__main__":
             isConverged=False
             
             sys.startSys()
-            sys.startClient(W[w,0])
+            sys.startClient(W[w])
             
             #g = Client("localhost:11211")
             #g.set("t1_hw", "%f" %(5))
