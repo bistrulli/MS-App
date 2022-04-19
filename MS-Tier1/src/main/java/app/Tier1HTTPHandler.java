@@ -27,9 +27,10 @@ public class Tier1HTTPHandler extends TierHttpHandler {
 	}
 
 	public void handleResponse(HttpExchange req, String requestParamValue) throws InterruptedException, IOException {
-		//this.addToCGV2Group(this.getName());
+		this.addToCGV2Group(this.getName());
 		GetThreadID.setAffinity(GetThreadID.get_tid(), 2, 6);
-		//this.updateAffinity(2,6);
+		
+		
 		this.measureIngress();
 
 		Jinjava jinjava = new Jinjava();

@@ -19,6 +19,104 @@ try:
 except:
     raise ValueError("Need to setup JAVA_HOME env variable")
 
+class batchMinSim():
+    #batch meaans param
+    N=None
+    K=None
+    samples=None
+    logfile=None
+    
+    def __init__(self,N=10,K=10,logFile=None):
+        self.samples=None
+        self.N=N
+        self.K=K
+        self.logfile=logFile
+        
+    
+    def batchMeans(self):
+        rtConverged=False
+        tConverged=False
+        Res={"RT":None,"T":None}
+        
+        rtFile=open(self.logfile)
+        if os.fstat(rtFile.fileno()).st_size:
+            if(self.samples is None):
+                self.samples=np.loadtxt(self.logfile,ndmin=2,delimiter="\t")
+            else:
+                newSamples=np.loadtxt(self.logfile,ndmin=2,delimiter="\t",skiprows=self.samples.shape[0])
+                if(newSamples.shape[0]>0):
+                    self.samples=np.vstack((self.samples,newSamples))
+            
+            RT=self.batchMeansRT(self.samples[:,[0]])
+            T=self.batchMeansT(self.samples[:,[1]])
+            
+            if(RT):
+                print("####%s RT####"%(self.logfile))
+                absE=abs((RT[1][1]-RT[0]))
+                relE=absE/RT[0]
+                print(RT[1][0]/10**9,RT[1][1]/10**9)
+                print(RT[0]/10**9,relE*100,absE/10**9)
+                if(relE<1):
+                    rtConverged=True
+                    
+                Res["RT"]={"Avg":RT[0]/10**9,"CI":absE/10**9}
+
+            
+            if(T):
+                print("####%s T####"%(self.logfile))
+                absE=abs((T[1][1]-T[0]))
+                relE=absE/T[0]
+                print(T[1][0],T[1][1])
+                print(T[0],relE*100,absE)
+                if(relE<1):
+                    tConverged=True
+                
+                Res["T"]={"Avg":T[0],"CI":absE}
+            
+        return [rtConverged and tConverged,Res]
+        
+    
+    def batchMeansT(self,T):
+        T=np.sort(T)
+        T=T-T[0,0]
+        
+        Tend=int(np.floor(T[-1,0]/10**9))
+        print("Time event Limit",Tend)
+        Tsmp=np.matrix([T[np.where((T[:,0] > (i-1)*10**9) & (T[:,0] <= i*10**9)),0].shape[1] for i in range(1,Tend+1)]).T
+        
+        if(Tsmp.shape[0]<(self.N+1)*self.K):
+            return False
+        else:
+            nB=int(np.floor(Tsmp.shape[0]//self.K))
+            B=np.array([[Tsmp[int(k+b*self.K),0] for k in range(self.K)] for b in range(nB)])
+        
+            Bm=np.mean(B[1:-1,:],axis=1)
+            
+            print(np.mean(Bm))
+            
+            CI=st.t.interval(alpha=0.95, df=Bm.shape[0]-1,
+              loc=np.mean(Bm),
+              scale=st.sem(Bm))
+            
+            return [np.mean(Bm),CI]
+        
+    def batchMeansRT(self,RT):
+        B=None
+        print("RT batchmeans",RT.shape[0])
+        if(RT.shape[0]<self.N*self.K):
+            return False
+        else:
+            nB=int(np.floor(RT.shape[0]//self.K))
+            B=np.array([[ RT[int(k+b*self.K),0] for k in range(self.K)] for b in range(nB)])
+            
+            Bm=np.mean(B,axis=1)
+            
+            CI=st.t.interval(alpha=0.95, df=Bm.shape[0]-1,
+              loc=np.mean(Bm),
+              scale=st.sem(Bm))
+            
+            return [np.mean(Bm),CI]
+    
 
 class jvm_sys(system_interface):
     
@@ -30,6 +128,7 @@ class jvm_sys(system_interface):
     keys = ["think", "e1_bl", "e1_ex", "t1_hw"]
     isCpu = None
     tier_socket = None
+    
     
     def __init__(self, sysRootPath, isCpu=False):
         self.sysRootPath = sysRootPath
@@ -289,31 +388,8 @@ class jvm_sys(system_interface):
     def testTcpState(self, tier):
         msg = self.getTierTcpState(tier)
         print(msg)
-        
-    def batchMeansRT(self,rtLogName,N=10,K=10):
-        RT=np.loadtxt(rtLogName,ndmin=2)
-        B=None
-        print(RT.shape[0])
-        if(RT.shape[0]<N*K):
-            return False
-        else:
-            nB=int(np.floor(RT.shape[0]//K))
-            B=np.array([[ RT[int(k+b*K),0] for k in range(K)] for b in range(nB)])
-            
-            Bm=np.mean(B,axis=1)
-            
-            CI=st.t.interval(alpha=0.95, df=Bm.shape[0]-1,
-              loc=np.mean(Bm),
-              scale=st.sem(Bm))
-            
-            print("####%s####"%(rtLogName))
-            print(CI[0]/10**9,CI[1]/10**9)
-            print(np.mean(Bm)/10**9,(CI[1]-np.mean(Bm))*100/np.mean(Bm),(CI[1]-np.mean(Bm))/10**9)
-            
-            return [np.mean(Bm),CI]
-            
-            
-                    
+    
+    
     
     def testSystem(self):
         self.startSys()
@@ -361,65 +437,61 @@ if __name__ == "__main__":
     try:
         isCpu = True
         g = None
-        jvm_sys = jvm_sys("../", isCpu)
+        sys = None
         
-        W=[4,10,20,30,40,50]
+        W=[4,8,12,16,20,24,28,32,36,40,44,48,52,56,60]
         rtExp=np.zeros([len(W),2])
+        tExp=np.zeros([len(W),2])
         rtCI=np.zeros([len(W),2])
+        tCI=np.zeros([len(W),2])
         
         for w in range(len(W)) :
+            
+            sys = jvm_sys("../", isCpu)
+            
+            ClientBM=batchMinSim(N=10, K=10, logFile="Client_rtlog.txt")
+            T1BM=batchMinSim(N=10, K=10, logFile="t1_rtlog.txt")
         
             isConverged=False
             
-            jvm_sys.startSys()
-            jvm_sys.startClient(W[w])
+            sys.startSys()
+            sys.startClient(W[w])
             
-            g = Client("localhost:11211")
-            
+            #g = Client("localhost:11211")
             #g.set("t1_hw", "%f" %(5))
             
             X = []
-            Client_rt=None
-            T1_rt=None
+            resC=None
+            resT1=None
             while(not isConverged):
                 
-                isConverged=True
                 
-                Client_rt=jvm_sys.batchMeansRT("Client_rtlog.txt",N=30,K=30);
-                if(Client_rt):
-                    e=(Client_rt[1][1]-Client_rt[0])/Client_rt[0]
-                    if(e>0.01):
-                        isConverged=isConverged and False
-                else:
-                    isConverged=isConverged and False
-                        
-                T1_rt=jvm_sys.batchMeansRT("t1_rtlog.txt",N=30,K=30);
-                if(T1_rt):
-                    e=(T1_rt[1][1]-T1_rt[0])/T1_rt[0]
-                    if(e>0.01):
-                        isConverged=isConverged and False
-                else:
-                    isConverged=isConverged and False
+                resC=ClientBM.batchMeans()
+                resT1=T1BM.batchMeans()
+                
+                isConverged=resC[0] and resT1[0]
                 
                 time.sleep(0.5)
-                
             
             #solvo i dati di questa iterazione
-            rtExp[w,:]=[Client_rt[0]/10**9,T1_rt[0]/10**9]
-            rtCI[w,:]=[(Client_rt[1][1]-Client_rt[0])/10**9,(T1_rt[1][1]-T1_rt[0])/10**9]
+            rtExp[w,:]=[resC[1]["RT"]["Avg"],resT1[1]["RT"]["Avg"]]
+            rtCI[w,:]=[resC[1]["RT"]["CI"],resT1[1]["RT"]["CI"]]
             
-            jvm_sys.stopClient()
-            jvm_sys.stopSystem()
+            tExp[w,:]=[resC[1]["T"]["Avg"],resT1[1]["T"]["Avg"]]
+            tCI[w,:]=[resC[1]["T"]["CI"],resT1[1]["T"]["CI"]]
             
-            savemat("simple_exp.mat", {"RT":rtExp,"CI":rtCI,"Cli":W})
+            sys.stopClient()
+            sys.stopSystem()
+            
+            savemat("./data/2tier.mat", {"RTm":rtExp,"rtCI":rtCI,"Tm":tExp,"tCI":tCI,"Cli":W})
         
         
             
     except Exception as ex:
         traceback.print_exception(type(ex), ex, ex.__traceback__)
     finally:
-        jvm_sys.stopClient()
-        jvm_sys.stopSystem()
+        sys.stopClient()
+        sys.stopSystem()
         if(g is not None):
             g.close()
         
