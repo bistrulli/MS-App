@@ -447,7 +447,6 @@ if __name__ == "__main__":
         tExp=np.zeros([len(W),2])
         rtCI=np.zeros([len(W),2])
         tCI=np.zeros([len(W),2])
-        W=[]
         NC=[]
         
         for w in range(len(W)) :
