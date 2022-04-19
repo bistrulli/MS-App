@@ -56,7 +56,7 @@ class batchMinSim():
                 relE=absE/RT[0]
                 print(RT[1][0]/10**9,RT[1][1]/10**9)
                 print(RT[0]/10**9,relE*100,absE/10**9)
-                if(relE<1):
+                if(relE<0.01):
                     rtConverged=True
                     
                 Res["RT"]={"Avg":RT[0]/10**9,"CI":absE/10**9}
@@ -68,7 +68,7 @@ class batchMinSim():
                 relE=absE/T[0]
                 print(T[1][0],T[1][1])
                 print(T[0],relE*100,absE)
-                if(relE<1):
+                if(relE<0.01):
                     tConverged=True
                 
                 Res["T"]={"Avg":T[0],"CI":absE}
@@ -438,6 +438,8 @@ if __name__ == "__main__":
         isCpu = True
         g = None
         sys = None
+        N=30
+        K=30
         
         W=[4,8,12,16,20,24,28,32,36,40,44,48,52,56,60]
         rtExp=np.zeros([len(W),2])
@@ -449,8 +451,8 @@ if __name__ == "__main__":
             
             sys = jvm_sys("../", isCpu)
             
-            ClientBM=batchMinSim(N=10, K=10, logFile="Client_rtlog.txt")
-            T1BM=batchMinSim(N=10, K=10, logFile="t1_rtlog.txt")
+            ClientBM=batchMinSim(N=N, K=K, logFile="Client_rtlog.txt")
+            T1BM=batchMinSim(N=N, K=K, logFile="t1_rtlog.txt")
         
             isConverged=False
             
