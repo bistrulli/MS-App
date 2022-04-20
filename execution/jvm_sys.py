@@ -479,21 +479,23 @@ if __name__ == "__main__":
         K=30
         
         #W=[4,8,12,16,20,24,28,32,36,40,44,48,52,56,60]
-        W=np.random.randint(low=4,high=50,size=[10])
-        rtExp=np.zeros([len(W),2])
-        tExp=np.zeros([len(W),2])
-        rtCI=np.zeros([len(W),2])
-        tCI=np.zeros([len(W),2])
+        W=[2]
+        #W=np.random.randint(low=4,high=50,size=[10])
+        rtExp=np.zeros([len(W),3])
+        tExp=np.zeros([len(W),3])
+        rtCI=np.zeros([len(W),3])
+        tCI=np.zeros([len(W),3])
         NC=[]
         
         for w in range(len(W)) :
             
-            NC.append([np.inf,3])
+            NC.append([np.inf,3,3])
             
             sys = jvm_sys("../", isCpu)
             
             ClientBM=batchMinSim(N=N, K=K, logFile="Client_rtlog.log")
             T1BM=batchMinSim(N=N, K=K, logFile="t1_rtlog.log")
+            T2BM=batchMinSim(N=N, K=K, logFile="t2_rtlog.log")
         
             isConverged=False
             
@@ -506,22 +508,24 @@ if __name__ == "__main__":
             X = []
             resC=None
             resT1=None
+            resT2=None
             while(not isConverged):
                 
                 
                 resC=ClientBM.batchMeans()
                 resT1=T1BM.batchMeans()
+                resT2=T2BM.batchMeans()
                 
-                isConverged=resC[0] and resT1[0]
+                isConverged=resC[0] and resT1[0] and resT2[0]
                 
                 time.sleep(0.5)
             
             #solvo i dati di questa iterazione
-            rtExp[w,:]=[resC[1]["RT"]["Avg"],resT1[1]["RT"]["Avg"]]
-            rtCI[w,:]=[resC[1]["RT"]["CI"],resT1[1]["RT"]["CI"]]
+            rtExp[w,:]=[resC[1]["RT"]["Avg"],resT1[1]["RT"]["Avg"],resT2[1]["RT"]["Avg"]]
+            rtCI[w,:]=[resC[1]["RT"]["CI"],resT1[1]["RT"]["CI"],resT2[1]["RT"]["CI"]]
             
-            tExp[w,:]=[resC[1]["T"]["Avg"],resT1[1]["T"]["Avg"]]
-            tCI[w,:]=[resC[1]["T"]["CI"],resT1[1]["T"]["CI"]]
+            tExp[w,:]=[resC[1]["T"]["Avg"],resT1[1]["T"]["Avg"],resT2[1]["T"]["Avg"]]
+            tCI[w,:]=[resC[1]["T"]["CI"],resT1[1]["T"]["CI"],resT2[1]["T"]["CI"]]
             
             sys.stopClient()
             sys.stopSystem()
