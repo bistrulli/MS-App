@@ -22,13 +22,14 @@ public class Main {
 	private static Boolean isEmu = false;
 	private static String jedisHost = null;
 	private static String tier2Host;
-	private static boolean cgv2= false;
+	private static boolean cgv2 = false;
+	private static int[] affinity = null;
 
 	public static void main(String[] args) {
 		System.setProperty("net.spy.log.LoggerImpl", "net.spy.memcached.compat.log.SLF4JLogger");
-		Unirest.config().concurrency(2000,2000); 
+		Unirest.config().concurrency(2000, 2000);
 		Main.getCliOptions(args);
-		if(Main.cgv2) {
+		if (Main.cgv2) {
 			Main.addToCgv2();
 		}
 		SimpleTask[] Sys = Main.genSystem();
@@ -41,18 +42,18 @@ public class Main {
 	}
 
 	public static void resetState(SimpleTask task) throws InterruptedException, ExecutionException {
-		MemcachedClient memcachedClient=null;
+		MemcachedClient memcachedClient = null;
 		try {
 			memcachedClient = new MemcachedClient(new InetSocketAddress(Main.jedisHost, 11211));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		memcachedClient.set(task.getName()+"_sw", 3600,"1").get();
-		memcachedClient.set(task.getName()+"_hw", 3600,"1").get();
+		memcachedClient.set(task.getName() + "_sw", 3600, "1").get();
+		memcachedClient.set(task.getName() + "_hw", 3600, "1").get();
 		String[] entries = task.getEntries().keySet().toArray(new String[0]);
 		for (String e : entries) {
-			memcachedClient.set(e + "_bl",Integer.MAX_VALUE, "0").get();
-			memcachedClient.set(e + "_ex",Integer.MAX_VALUE,"0").get();
+			memcachedClient.set(e + "_bl", Integer.MAX_VALUE, "0").get();
+			memcachedClient.set(e + "_ex", Integer.MAX_VALUE, "0").get();
 		}
 		memcachedClient.shutdown();
 	}
@@ -64,18 +65,18 @@ public class Main {
 		t1Entries.put("e1", Tier1HTTPHandler.class);
 		t1Entries_stimes.put("e1", 100l);
 		final SimpleTask t1 = new SimpleTask("localhost", 3000, t1Entries, t1Entries_stimes, 1, Main.isEmu, "t1",
-				Main.jedisHost,null,100l,null,Main.cgv2);
+				Main.jedisHost, null, 100l, null, Main.cgv2);
 		t1.setHwCore(1f);
-		t1.setAffinity(new int[] {2,3});//non uso il construttore ma il metodo set
+		if (Main.affinity != null)
+			t1.setAffinity(Main.affinity);// non uso il construttore ma il metodo set
 		Tier1HTTPHandler.setTier2Host(Main.tier2Host);
 		return new SimpleTask[] { t1 };
 	}
-	
+
 	public static boolean validate(final String hostname) {
-        return InetAddresses.isUriInetAddress(hostname) || 
-        		InternetDomainName.isValid(hostname);
-    }
-	
+		return InetAddresses.isUriInetAddress(hostname) || InternetDomainName.isValid(hostname);
+	}
+
 	public static void addToCgv2() {
 		try {
 			int tid = GetThreadID.get_tid();
@@ -97,11 +98,12 @@ public class Main {
 	public static void getCliOptions(String[] args) {
 
 		int c;
-		LongOpt[] longopts = new LongOpt[4];
+		LongOpt[] longopts = new LongOpt[5];
 		longopts[0] = new LongOpt("cpuEmu", LongOpt.REQUIRED_ARGUMENT, null, 0);
 		longopts[1] = new LongOpt("jedisHost", LongOpt.REQUIRED_ARGUMENT, null, 1);
 		longopts[2] = new LongOpt("tier2Host", LongOpt.REQUIRED_ARGUMENT, null, 2);
 		longopts[3] = new LongOpt("cgv2", LongOpt.REQUIRED_ARGUMENT, null, 3);
+		longopts[4] = new LongOpt("aff", LongOpt.REQUIRED_ARGUMENT, null, 4);
 
 		Getopt g = new Getopt("ddctrl", args, "", longopts);
 		g.setOpterr(true);
@@ -126,14 +128,23 @@ public class Main {
 				break;
 			case 2:
 				try {
-					Main.tier2Host = String.valueOf(g.getOptarg()); 
+					Main.tier2Host = String.valueOf(g.getOptarg());
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 				break;
 			case 3:
 				try {
-					Main.cgv2 = Integer.valueOf(g.getOptarg()) > 0 ? true : false; 
+					Main.cgv2 = Integer.valueOf(g.getOptarg()) > 0 ? true : false;
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				break;
+			case 4:
+				try {
+					String aff = g.getOptarg();
+					String[] cpus = aff.split("-");
+					Main.affinity = new int[] { Integer.valueOf(cpus[0]), Integer.valueOf(cpus[1]) };
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

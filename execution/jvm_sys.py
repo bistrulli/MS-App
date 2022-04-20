@@ -211,7 +211,8 @@ class jvm_sys(system_interface):
                              "-Djava.compiler=NONE", "-jar", "-Xint",
                              '%sMS-Tier1/target/MS-Tier1-0.0.1-jar-with-dependencies.jar' % (self.sysRootPath),
                              '--cpuEmu', "%d" % (cpuEmu), '--jedisHost', 'localhost',
-                             "--tier2Host", "localhost"])
+                             "--tier2Host", "localhost",
+                             "--aff","3-5"])
             self.waitTier1()
             self.sys.append(self.findProcessIdByName("MS-Tier1-0.0.1")[0])
     
