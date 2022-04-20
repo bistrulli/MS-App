@@ -492,8 +492,8 @@ if __name__ == "__main__":
             
             sys = jvm_sys("../", isCpu)
             
-            ClientBM=batchMinSim(N=N, K=K, logFile="Client_rtlog.txt")
-            T1BM=batchMinSim(N=N, K=K, logFile="t1_rtlog.txt")
+            ClientBM=batchMinSim(N=N, K=K, logFile="Client_rtlog.log")
+            T1BM=batchMinSim(N=N, K=K, logFile="t1_rtlog.log")
         
             isConverged=False
             
