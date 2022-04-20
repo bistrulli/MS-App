@@ -23,7 +23,7 @@
 hs_err_pid*
 
 #mvn target dir
-target/
+**/target/
 
 #macfile
 .DS_Store
