@@ -12,6 +12,7 @@
 	<modules>
 		<module>MS-Client</module>
 		<module>MS-Tier1</module>
+		<module>MS-Tier2</module>
 	</modules>
 	<build>
 		<sourceDirectory>src</sourceDirectory>

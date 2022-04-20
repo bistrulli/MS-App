@@ -145,7 +145,7 @@ class jvm_sys(system_interface):
                          "-Djava.compiler=NONE", "-jar",
                          '%sMS-Client/target/MS-Client-0.0.1-jar-with-dependencies.jar' % (self.sysRootPath),
                          '--initPop', '%d' % (pop), '--jedisHost', 'localhost', '--tier1Host', 'localhost',
-                         '--queues', '[\"think\", \"e1_bl\", \"e1_ex\", \"t1_hw\"]'])
+                         '--queues', '[\"think\", \"e1_bl\", \"e1_ex\", \"t1_hw\",\"e2_bl\", \"e2_ex\", \"t2_hw\"]'])
         
         self.waitClient()
         
@@ -186,6 +186,18 @@ class jvm_sys(system_interface):
         self.sys.append(self.findProcessIdByName("memcached")[0])
         
         if(not self.isCpu):
+            
+            subprocess.Popen([javaCmd,
+                            "-Xmx15G", "-Xms15G",
+                             # "-XX:ParallelGCThreads=1",
+                             # "-XX:+UnlockExperimentalVMOptions","-XX:+UseEpsilonGC",
+                             "-Djava.compiler=NONE", "-jar",
+                             '%sMS-Tier2/target/MS-Tier2-0.0.1-jar-with-dependencies.jar' % (self.sysRootPath),
+                             '--cpuEmu', "%d" % (cpuEmu), '--jedisHost', 'localhost'])
+            
+            self.waitTier2()
+            self.sys.append(self.findProcessIdByName("MS-Tier2-0.0.1")[0])
+            
             subprocess.Popen([javaCmd,
                             "-Xmx15G", "-Xms15G",
                              # "-XX:ParallelGCThreads=1",
@@ -198,13 +210,15 @@ class jvm_sys(system_interface):
             self.waitTier1()
             self.sys.append(self.findProcessIdByName("MS-Tier1-0.0.1")[0])
         else:
-            # subprocess.Popen(["cgexec", "-g", "cpu:t1", "--sticky", 
-            #                   javaCmd,
-            #                  "-Xmx15G", "-Xms15G",
-            #                  "-Djava.compiler=NONE", "-jar", "-Xint",
-            #                  '%sMS-Tier1/target/MS-Tier1-0.0.1-jar-with-dependencies.jar' % (self.sysRootPath),
-            #                  '--cpuEmu', "%d" % (cpuEmu), '--jedisHost', 'localhost',
-            #                  "--tier2Host", "localhost"])
+            
+            subprocess.Popen([javaCmd,
+                             "-Xmx15G", "-Xms15G",
+                             "-Djava.compiler=NONE", "-jar", "-Xint",
+                             '%sMS-Tier1/target/MS-Tier2-0.0.1-jar-with-dependencies.jar' % (self.sysRootPath),
+                             '--cpuEmu', "%d" % (cpuEmu), '--jedisHost', 'localhost',
+                             "--aff","6-8"])
+            self.waitTier2()
+            self.sys.append(self.findProcessIdByName("MS-Tier2-0.0.1")[0])
             
             subprocess.Popen([javaCmd,
                              "-Xmx15G", "-Xms15G",
@@ -273,6 +287,28 @@ class jvm_sys(system_interface):
             print("connected to tier1")
         else:
             raise ValueError("error while connceting to tier1")
+    
+    def waitTier2(self):
+        connected = False
+        limit = 1000
+        atpt = 0
+        base_client = Client(("localhost", 11211))
+        base_client.set("test_ex", "1")
+        while(atpt < limit and not connected):
+            try:
+                r = req.get('http://localhost:3001?entry=e2&snd=test')
+                connected = True
+                break
+            except:
+                time.sleep(0.2)
+            finally:
+                atpt += 1
+        
+        base_client.close()
+        if(connected):
+            print("connected to tier2")
+        else:
+            raise ValueError("error while connceting to tier2")
     
     def waitClient(self):
         connected = False

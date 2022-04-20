@@ -1,59 +1,37 @@
-package app;
+package main.java.app;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.URI;
 import java.util.Map;
 
 import com.google.common.collect.Maps;
 import com.hubspot.jinjava.Jinjava;
-
 import com.sun.net.httpserver.HttpExchange;
 
-import Server.AcquireHttpHandler;
 import Server.SimpleTask;
 import Server.TierHttpHandler;
 import jni.GetThreadID;
-import kong.unirest.HttpResponse;
-import kong.unirest.Unirest;
-import kong.unirest.UnirestException;
 
 @SuppressWarnings("restriction")
-public class Tier1HTTPHandler extends TierHttpHandler {
+public class Tier2HTTPHandler extends TierHttpHandler {
 
-	private static String tier2Host = null;
-
-	public Tier1HTTPHandler(SimpleTask lqntask, HttpExchange req, long stime) {
+	public Tier2HTTPHandler(SimpleTask lqntask, HttpExchange req, long stime) {
 		super(lqntask, req, stime);
 	}
 
 	public void handleResponse(HttpExchange req, String requestParamValue) throws InterruptedException, IOException {
 		int[] aff;
-		// this.addToCGV2Group(this.getName());
-		
-		//questa levo aggiungere alla classe principale
-		Map<String, String> reqParams = this.getLqntask().queryToMap(req.getRequestURI().getQuery());
-		
-		if ((aff = this.getLqntask().getAffinity()) != null)
+		//this.addToCGV2Group(this.getName());
+		if((aff=this.getLqntask().getAffinity())!=null)
 			GetThreadID.setAffinity(GetThreadID.get_tid(), aff[0], aff[1]);
-
+		
+		
 		this.measureIngress();
 
 		Jinjava jinjava = new Jinjava();
 		Map<String, Object> context = Maps.newHashMap();
-		context.put("task", "Tier1");
-		context.put("entry", "e1");
-
-		HttpResponse<String> resp = null;
-		try {
-			this.measureEgress();
-			resp = Unirest.get(URI.create(
-					"http://" + Tier1HTTPHandler.getTier2Host() + ":3001/?id="+reqParams.get("id")+ "&entry=e2" + "&snd=" + this.getName())
-					.toString()).header("Connection", "close").asString();
-			this.measureReturn();
-		} catch (UnirestException e) {
-			e.printStackTrace();
-		}
+		context.put("task", "Tier2");
+		context.put("entry", "e2");
 
 		String renderedTemplate = jinjava.render(this.getWebPageTpl(), context);
 
@@ -82,19 +60,11 @@ public class Tier1HTTPHandler extends TierHttpHandler {
 
 	@Override
 	public String getWebPageName() {
-		return "tier1.html";
+		return "tier2.html";
 	}
 
 	@Override
 	public String getName() {
-		return "e1";
-	}
-
-	public static String getTier2Host() {
-		return tier2Host;
-	}
-
-	public static void setTier2Host(String tier2Host) {
-		Tier1HTTPHandler.tier2Host = tier2Host;
+		return "e2";
 	}
 }
