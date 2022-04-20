@@ -27,8 +27,10 @@ public class Tier1HTTPHandler extends TierHttpHandler {
 	}
 
 	public void handleResponse(HttpExchange req, String requestParamValue) throws InterruptedException, IOException {
-		this.addToCGV2Group(this.getName());
-		GetThreadID.setAffinity(GetThreadID.get_tid(), 2, 4);
+		int[] aff;
+		//this.addToCGV2Group(this.getName());
+		if((aff=this.getLqntask().getAffinity())!=null)
+			GetThreadID.setAffinity(GetThreadID.get_tid(), aff[0], aff[1]);
 		
 		
 		this.measureIngress();

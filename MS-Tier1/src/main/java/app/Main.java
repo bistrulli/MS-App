@@ -66,6 +66,7 @@ public class Main {
 		final SimpleTask t1 = new SimpleTask("localhost", 3000, t1Entries, t1Entries_stimes, 1, Main.isEmu, "t1",
 				Main.jedisHost,null,100l,null,Main.cgv2);
 		t1.setHwCore(1f);
+		t1.setAffinity(new int[] {2,3});//non uso il construttore ma il metodo set
 		Tier1HTTPHandler.setTier2Host(Main.tier2Host);
 		return new SimpleTask[] { t1 };
 	}
