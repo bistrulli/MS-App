@@ -216,7 +216,7 @@ class jvm_sys(system_interface):
                              "-Djava.compiler=NONE", "-jar", "-Xint",
                              '%sMS-Tier2/target/MS-Tier2-0.0.1-jar-with-dependencies.jar' % (self.sysRootPath),
                              '--cpuEmu', "%d" % (cpuEmu), '--jedisHost', 'localhost',
-                             "--aff","6-8"])
+                             "--aff","6-9"])
             self.waitTier2()
             self.sys.append(self.findProcessIdByName("MS-Tier2-0.0.1")[0])
             
@@ -226,7 +226,7 @@ class jvm_sys(system_interface):
                              '%sMS-Tier1/target/MS-Tier1-0.0.1-jar-with-dependencies.jar' % (self.sysRootPath),
                              '--cpuEmu', "%d" % (cpuEmu), '--jedisHost', 'localhost',
                              "--tier2Host", "localhost",
-                             "--aff","3-5"])
+                             "--aff","2-5"])
             self.waitTier1()
             self.sys.append(self.findProcessIdByName("MS-Tier1-0.0.1")[0])
     
@@ -478,8 +478,7 @@ if __name__ == "__main__":
         N=30
         K=30
         
-        #W=[4,8,12,16,20,24,28,32,36,40,44,48,52,56,60]
-        W=[2]
+        W=[4,8,12,16,20,24,28,32,36,40,44,48,52,56,60]
         #W=np.random.randint(low=4,high=50,size=[10])
         rtExp=np.zeros([len(W),3])
         tExp=np.zeros([len(W),3])
