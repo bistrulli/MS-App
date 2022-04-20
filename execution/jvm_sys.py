@@ -214,7 +214,7 @@ class jvm_sys(system_interface):
             subprocess.Popen([javaCmd,
                              "-Xmx15G", "-Xms15G",
                              "-Djava.compiler=NONE", "-jar", "-Xint",
-                             '%sMS-Tier1/target/MS-Tier2-0.0.1-jar-with-dependencies.jar' % (self.sysRootPath),
+                             '%sMS-Tier2/target/MS-Tier2-0.0.1-jar-with-dependencies.jar' % (self.sysRootPath),
                              '--cpuEmu', "%d" % (cpuEmu), '--jedisHost', 'localhost',
                              "--aff","6-8"])
             self.waitTier2()
