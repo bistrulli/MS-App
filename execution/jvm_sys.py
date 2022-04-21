@@ -226,7 +226,7 @@ class jvm_sys(system_interface):
                              '%sMS-Tier1/target/MS-Tier1-0.0.1-jar-with-dependencies.jar' % (self.sysRootPath),
                              '--cpuEmu', "%d" % (cpuEmu), '--jedisHost', 'localhost',
                              "--tier2Host", "localhost",
-                             "--aff","2-5"])
+                             "--aff","2-3"])
             self.waitTier1()
             self.sys.append(self.findProcessIdByName("MS-Tier1-0.0.1")[0])
     
@@ -488,7 +488,7 @@ if __name__ == "__main__":
         
         for w in range(len(W)) :
             
-            NC.append([np.inf,3,3])
+            NC.append([np.inf,2,4])
             
             sys = jvm_sys("../", isCpu)
             
@@ -529,7 +529,7 @@ if __name__ == "__main__":
             sys.stopClient()
             sys.stopSystem()
             
-            savemat("./data/3tier_learng.mat", {"RTm":rtExp,"rtCI":rtCI,"Tm":tExp,"tCI":tCI,"Cli":W,"NC":NC})
+            savemat("./data/3tier_learn2.mat", {"RTm":rtExp,"rtCI":rtCI,"Tm":tExp,"tCI":tCI,"Cli":W,"NC":NC})
         
         
             
