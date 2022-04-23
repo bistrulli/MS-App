@@ -43,7 +43,7 @@ T = @(X)propensities_2state(X,p);
 opts = odeset('Events',@(t,y)eventfun(t,y,jump,T));
 [t,y]=ode23t(@(t,y) jump'*T(y),[0,Inf], X0,opts);
 
-Ts=y(end, size(MU,2)+1:end)/t(end);
+Ts=y(end, size(MU,2)+1:end)/(t(end)-t(1));
 
 end
 
@@ -53,13 +53,13 @@ Rate = [p.P(1,2)*p.MU(1)*X(1);
         p.P(1,3)*p.MU(1)*X(1);
         p.P(1,1)*p.MU(1)*X(1);
         
-        (X(2)/sum(X([2,3])))*p.P(2,1)*p.MU(2)*min(sum(X([2,3])),p.NC(2));
-        (X(2)/sum(X([2,3])))*p.P(2,3)*p.MU(2)*min(sum(X([2,3])),p.NC(2));
-        (X(2)/sum(X([2,3])))*p.P(2,2)*p.MU(2)*min(sum(X([2,3])),p.NC(2));
+        (X(2)/sum(X([2])))*p.P(2,1)*p.MU(2)*min(sum(X([2])),p.NC(2));
+        (X(2)/sum(X([2])))*p.P(2,3)*p.MU(2)*min(sum(X([2])),p.NC(2));
+        (X(2)/sum(X([2])))*p.P(2,2)*p.MU(2)*min(sum(X([2])),p.NC(2));
         
-        (X(3)/sum(X([2,3])))*p.P(3,1)*p.MU(3)*min(sum(X([2,3])),p.NC(2));
-        (X(3)/sum(X([2,3])))*p.P(3,2)*p.MU(3)*min(sum(X([2,3])),p.NC(2));
-        (X(3)/sum(X([2,3])))*p.P(3,3)*p.MU(3)*min(sum(X([2,3])),p.NC(2));
+        (X(3)/sum(X([3])))*p.P(3,1)*p.MU(3)*min(sum(X([3])),p.NC(3));
+        (X(3)/sum(X([3])))*p.P(3,2)*p.MU(3)*min(sum(X([3])),p.NC(3));
+        (X(3)/sum(X([3])))*p.P(3,3)*p.MU(3)*min(sum(X([3])),p.NC(3));
     ];
 Rate(isnan(Rate))=0;
 end

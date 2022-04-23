@@ -173,7 +173,7 @@ class jvm_sys(system_interface):
             finally:
                 self.client = None
     
-    def startSys(self):
+    def startSys(self,affinity=None):
         
         # if(self.isCpu):
         #     self.initCgroups()
@@ -211,12 +211,20 @@ class jvm_sys(system_interface):
             self.sys.append(self.findProcessIdByName("MS-Tier1-0.0.1")[0])
         else:
             
+            aff=np.array([[0,0],[0,0]]);
+            
+            if(affinity is not None):
+                aff=affinity
+            else:
+                aff[0,:]=[2,6]
+                aff[1,:]=[7,10]
+            
             subprocess.Popen([javaCmd,
                              "-Xmx15G", "-Xms15G",
                              "-Djava.compiler=NONE", "-jar", "-Xint",
                              '%sMS-Tier2/target/MS-Tier2-0.0.1-jar-with-dependencies.jar' % (self.sysRootPath),
                              '--cpuEmu', "%d" % (cpuEmu), '--jedisHost', 'localhost',
-                             "--aff","6-9"])
+                             "--aff","%d-%d"%(aff[1,0],aff[1,1])])
             self.waitTier2()
             self.sys.append(self.findProcessIdByName("MS-Tier2-0.0.1")[0])
             
@@ -226,7 +234,7 @@ class jvm_sys(system_interface):
                              '%sMS-Tier1/target/MS-Tier1-0.0.1-jar-with-dependencies.jar' % (self.sysRootPath),
                              '--cpuEmu', "%d" % (cpuEmu), '--jedisHost', 'localhost',
                              "--tier2Host", "localhost",
-                             "--aff","2-3"])
+                             "--aff","%d-%d"%(aff[0,0],aff[0,1])])
             self.waitTier1()
             self.sys.append(self.findProcessIdByName("MS-Tier1-0.0.1")[0])
     
@@ -478,8 +486,8 @@ if __name__ == "__main__":
         N=30
         K=30
         
-        W=[4,8,12,16,20,24,28,32,36,40,44,48,52,56,60]
-        #W=np.random.randint(low=4,high=50,size=[10])
+        # W=[4,8,12,16,20,24,28,32,36,40,44,48,52,56,60]
+        W=np.random.randint(low=4,high=50,size=[10])
         rtExp=np.zeros([len(W),3])
         tExp=np.zeros([len(W),3])
         rtCI=np.zeros([len(W),3])
@@ -488,7 +496,7 @@ if __name__ == "__main__":
         
         for w in range(len(W)) :
             
-            NC.append([np.inf,2,4])
+            NC.append([np.inf,np.random.randint(low=1,high=5),np.random.randint(low=1,high=5)])
             
             sys = jvm_sys("../", isCpu)
             
@@ -498,7 +506,7 @@ if __name__ == "__main__":
         
             isConverged=False
             
-            sys.startSys()
+            sys.startSys(affinity=np.array([[2,2+NC[-1][1]-1],[7,7+NC[-1][2]-1]]))
             sys.startClient(W[w])
             
             #g = Client("localhost:11211")

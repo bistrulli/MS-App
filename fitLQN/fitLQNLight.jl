@@ -1,21 +1,20 @@
 using Printf,Ipopt,MadNLP,Plots,MadNLPMumps,JuMP,MAT,ProgressBars,ParameterJuMP,Statistics
 
-DATA = matread("../execution/data/3tier_learng.mat")
+DATA = matread("../execution/data/3tier_learn.mat")
 
 nzIdz=sum(DATA["RTm"],dims=2).!=0
 
 Cli=zeros(sum(nzIdz),1)
 Tm=zeros(sum(nzIdz),size(DATA["Tm"],2))
 RTm=zeros(sum(nzIdz),size(DATA["RTm"],2))
-#NC=zeros(sum(nzIdz),size(DATA["NC"],2))
-NC=ones(sum(nzIdz),size(DATA["RTm"],2))*4.0
+NC=zeros(sum(nzIdz),size(DATA["NC"],2))
 
 for i=1:sum(nzIdz)
         if(DATA["Cli"][i]!=0)
                 global Cli[i]=DATA["Cli"][i]
                 global Tm[i,:]=DATA["Tm"][i,:]
                 global RTm[i,:]=DATA["RTm"][i,:]
-                #global NC[i,:]=DATA["NC"][i,:]
+                global NC[i,:]=DATA["NC"][i,:]
         end
 end
 
@@ -52,9 +51,10 @@ register(model, :min_, 1, f, autodiff=true) #∇f)
 
  mmu=1 ./minimum(RTm,dims=1)
 
-@variable(model,T[i=1:size(jump,1),j=1:npoints]>=0,start=0)
-@variable(model,RTlqn[i=1:size(jump,2),p=1:npoints]>=0,start = 0) #cerco di far conservare anche il response time Steady, state
+@variable(model,T[i=1:size(jump,1),j=1:npoints]>=0)
+@variable(model,RTlqn[i=1:size(jump,2),p=1:npoints]>=0) #cerco di far conservare anche il response time Steady, state
 @variable(model,MU[i=1:size(jump,2)]>=0)
+#MU=[1/0.3019,1/0.1053,1/0.1546]
 @variable(model,X[i=1:size(jump,2),j=1:npoints]>=0)
 @variable(model,P[i=1:size(jump,2),j=1:size(jump,2)]>=0)
 @variable(model,P2[i=1:size(jump,2),j=1:size(jump,2)]>=0)
@@ -67,9 +67,12 @@ register(model, :min_, 1, f, autodiff=true) #∇f)
 @constraint(model,P2.<=1)
 @constraint(model,P.<=1)
 @constraint(model,[i=1:size(P2,1)],P2[i,i]==0)
+@constraint(model,[p=1:npoints],X[:,p].<=(RTm[p,:].*Tm[p,:]))
 #@constraint(model,[i=1:size(P2,1)],P[i,i]==0)
 # @constraint(model,P[1,1]==0)
 # @constraint(model,MU[1]==1)
+
+#@constraint(model,MU.==[1/0.3019,1/0.1053,1/0.1546])
 
 for idx=1:size(MU,1)
         set_start_value(MU[idx],mmu[idx])
@@ -111,10 +114,13 @@ for p=1:npoints
         @constraints(model,begin
                 E_abs[1,p]>=(Tm[p,1]-sum(T[[1,2,3],p]))/Tm[p,1]
                 E_abs[1,p]>=-(Tm[p,1]-sum(T[[1,2,3],p]))/Tm[p,1]
+
                 E_abs[2,p]>=(Tm[p,2]-sum(T[[4,5,6],p]))/Tm[p,2]
                 E_abs[2,p]>=-(Tm[p,2]-sum(T[[4,5,6],p]))/Tm[p,2]
+
                 E_abs[3,p]>=(Tm[p,3]-sum(T[[7,8,9],p]))/Tm[p,3]
                 E_abs[3,p]>=-(Tm[p,3]-sum(T[[7,8,9],p]))/Tm[p,3]
+
         end)
 
         for i=1:size(jump,2)
@@ -122,10 +128,17 @@ for p=1:npoints
             #@constraint(model,RTlqn[i,p]==sum(P2[i,j]*RTm[p,j] for j=1:size(jump,2))+RTs[i,p])
             @constraint(model,ERT_abs[i,p]>=(RTlqn[i,p]-RTm[p,i])/RTm[p,i])
             @constraint(model,ERT_abs[i,p]>=(-RTlqn[i,p]+RTm[p,i])/RTm[p,i])
+
         end
 end
 
 
 #@objective(model,Min, sum(E_abs2[i,p] for i=1:size(E_abs2,1) for p=1:size(E_abs2,2))+sum(E_abs[i,p] for i=1:size(E_abs,1) for p=1:size(E_abs,2))+sum(ERT_abs[i,p] for i=1:size(ERT_abs,1) for p=1:size(E_abs,2)))
-@objective(model,Min, sum(MU)+sum(E_abs[i,p] for i=1:size(E_abs,1) for p=1:size(E_abs,2))+sum(ERT_abs[i,p] for i=1:size(ERT_abs,1) for p=1:size(E_abs,2)))
+@objective(model,Min, sum(E_abs[i,p] for i=1:size(E_abs,1) for p=1:size(E_abs,2))+sum(ERT_abs[i,p] for i=1:size(ERT_abs,1) for p=1:size(E_abs,2)))
+#@objective(model,Min, ETmax+ERTmax)
 JuMP.optimize!(model)
+
+matwrite("fromJulia.mat", Dict(
+               "RTlqn" => value.(RTlqn),
+               "T" => value.(T)
+       );)

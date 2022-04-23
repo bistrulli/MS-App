@@ -17,9 +17,9 @@ P{cclass} = Pn;
 model.link(P);
 %% Block 4: solution
 %solver = SolverFluid(model);
-%solver = SolverMVA(model,"exat");
-%solver = SolverCTMC(model);
-solver = SolverSSA(model,'samples',1e5);
+%solver = SolverMVA(model);
+solver = SolverCTMC(model,'force',true);
+%solver = SolverSSA(model,'samples',1e5);
 %ctmcAvgTable = solver.getAvgTable();
 
 % QN(i,r): mean queue-length of class r at station i
