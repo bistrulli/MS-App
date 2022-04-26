@@ -12,7 +12,7 @@
 % stem(sort(Tl(Idx,2)))
 % legend(["TClient_m","TClient_p"])
 
-load("/Users/emilio/git/MS-App/execution/data/3tier_learn.mat");
+load("/Users/emilio/git/MS-App/execution/data/3tier_learn2.mat");
 
 CIdx=sum(sum(RTm,2)~=0);
 %CIdx=15;
@@ -23,17 +23,17 @@ CIdx=sum(sum(RTm,2)~=0);
 %  0.00253123  0.0];
 % MU=[3.2865425244638855,9.781509324351875];
 
-P=[0.0295979   0.965357    0.00504501
- 6.28149e-7  1.27514e-8  0.999999
- 0.964592    0.0354084   2.15749e-8];
+P=[0.0118103  0.965132    0.0230579
+ 0.0149923  0.00994199  0.975066
+ 0.974695   0.0253045   5.04175e-8];
 
-P2=[7.19278e-11  0.964826     0.00504501
- 6.27823e-7   3.04763e-17  0.999999
- 0.0298691    2.26197e-10  5.24615e-17];
+P2=[0.0          0.964544     0.0230578
+ 2.74168e-10  0.0          0.975066
+ 0.0326173    1.57487e-10  0.0];
 
-MU=[2.8485821842348775
- 9.526420768479332
- 6.620697295164972];
+MU=[3.2755
+ 9.54432789079351
+ 6.93716033845325];
 
 
 RTl=zeros(CIdx,size(RTm,2));
@@ -54,8 +54,8 @@ hold on
 box on
 grid on
 plot(Cli(1:CIdx),RTm(1:CIdx,:),"linewidth",1.1)
-plot(Cli(1:CIdx),RTl(:,:),"--","linewidth",1.3)
-%plot(RTlqn(:,1:CIdx)',"--","linewidth",1.3)
+plot(Cli(1:CIdx),RTl(:,:),"-.","linewidth",1.3)
+plot(Cli(1:CIdx),RTlqn(:,1:CIdx)',"--","linewidth",1.3)
 legend(["RT_m","RT_p"])
 
 figure
@@ -63,20 +63,20 @@ hold on
 box on
 grid on
 plot(Cli(1:CIdx),Tm(1:CIdx,:),"linewidth",1.1)
-plot(Cli(1:CIdx),Tl(:,:),"--","linewidth",1.3)
-%plot(Cli(1:CIdx),sum(T([1,2,3],1:CIdx)),"--","linewidth",1.3)
+plot(Cli(1:CIdx),Tl(:,:),"-.","linewidth",1.3)
+plot(Cli(1:CIdx),sum(T([1,2,3],1:CIdx)),"--","linewidth",1.3)
 legend(["T_m","T_p"])
 
-figure
-boxplot(abs(RTm(1:CIdx,:)-RTl)*100./RTm(1:CIdx,:))
-title("Relative Prediction Error (Response Time)")
-box on
-grid on
-
-figure
-boxplot(abs(Tm(1:CIdx,:)-Tl)*100./Tm(1:CIdx,:))
-%boxplot(abs(Tm(1:CIdx,1)-sum(T([1,2,3],:))')*100./Tm(1:CIdx,:))
-title("Relative Prediction Error (Throughput)")
-box on
-grid on
+% figure
+% boxplot(abs(RTm(1:CIdx,:)-RTl)*100./RTm(1:CIdx,:))
+% title("Relative Prediction Error (Response Time)")
+% box on
+% grid on
+% 
+% figure
+% boxplot(abs(Tm(1:CIdx,:)-Tl)*100./Tm(1:CIdx,:))
+% %boxplot(abs(Tm(1:CIdx,1)-sum(T([1,2,3],:))')*100./Tm(1:CIdx,:))
+% title("Relative Prediction Error (Throughput)")
+% box on
+% grid on
 
