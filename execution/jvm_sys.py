@@ -509,7 +509,7 @@ if __name__ == "__main__":
         
             isConverged=False
             
-            sys.startSys(affinity=np.array([[2,2+NC[-1][1]-1],[7,7+NC[-1][2]-1]]))
+            sys.startSys(affinity=np.array([[2,2+NC[-1][1]-1],[2+NC[-1][1],2+NC[-1][1]+NC[-1][2]-1]]))
             sys.startClient(W[w])
             
             #g = Client("localhost:11211")
