@@ -1,0 +1,6 @@
+numpy
+cgroupspy
+pymemcache
+psutil
+matplotlib
+scipy
