@@ -1,7 +1,8 @@
 clear
 
-e1=load("/Users/emilio/git/MS-App/execution/data/3tier_learn.mat");
-e2=load("/Users/emilio/git/MS-App/execution/data/3tier_learn2.mat");
+e1=load("/Users/emilio/git/MS-App/execution/data/3tier_learn2.mat");
+e2=load("/Users/emilio/git/MS-App/execution/data/3tier_nocontesa.mat");
+
 
 Cli=cat(2,e1.Cli([1:end]),e2.Cli(1:end));
 RTm=cat(1,e1.RTm([1:end],:),e2.RTm([1:end],:));

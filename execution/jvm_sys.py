@@ -487,8 +487,8 @@ if __name__ == "__main__":
         K=30
         
         # W=[4,8,12,16,20,24,28,32,36,40,44,48,52,56,60]
-        #W=np.random.randint(low=4,high=50,size=[10]) 
-        W=[2,3,4,5,6,7,8,9,10,11,12,13]
+        W=np.random.randint(low=4,high=200,size=[20]) 
+        #W=[2,3,4,5,6,7,8,9,10,11,12,13]
         rtExp=np.zeros([len(W),3])
         tExp=np.zeros([len(W),3])
         rtCI=np.zeros([len(W),3])
@@ -497,9 +497,9 @@ if __name__ == "__main__":
         
         for w in range(len(W)) :
             
-            #NC.append([np.inf,np.random.randint(low=1,high=5),np.random.randint(low=1,high=5)])
+            NC.append([np.inf,np.random.randint(low=1,high=13),np.random.randint(low=1,high=13)])
             
-            NC.append([np.inf,13,13])
+            #NC.append([np.inf,13,13])
             
             sys = jvm_sys("../", isCpu)
             
@@ -540,7 +540,7 @@ if __name__ == "__main__":
             sys.stopClient()
             sys.stopSystem()
             
-            savemat("./data/3tier_nocontesa.mat", {"RTm":rtExp,"rtCI":rtCI,"Tm":tExp,"tCI":tCI,"Cli":W,"NC":NC})
+            savemat("./data/3tier_learn3.mat", {"RTm":rtExp,"rtCI":rtCI,"Tm":tExp,"tCI":tCI,"Cli":W,"NC":NC})
         
         
             
