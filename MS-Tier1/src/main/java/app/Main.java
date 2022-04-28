@@ -28,6 +28,8 @@ public class Main {
 	public static void main(String[] args) {
 		System.setProperty("net.spy.log.LoggerImpl", "net.spy.memcached.compat.log.SLF4JLogger");
 		Unirest.config().concurrency(2000, 2000);
+		Unirest.config().socketTimeout(0);
+		Unirest.config().connectTimeout(0);
 		Main.getCliOptions(args);
 		if (Main.cgv2) {
 			Main.addToCgv2();

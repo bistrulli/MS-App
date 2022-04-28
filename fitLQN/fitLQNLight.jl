@@ -1,6 +1,6 @@
 using Printf,Ipopt,MadNLP,Plots,MadNLPMumps,JuMP,MAT,ProgressBars,ParameterJuMP,Statistics
 
-DATA = matread("../execution/data/3tier_all.mat")
+DATA = matread("../execution/data/3tier_learn3.mat")
 
 nzIdz=sum(DATA["RTm"],dims=2).!=0
 
@@ -140,6 +140,6 @@ JuMP.optimize!(model)
 
 matwrite("fromJulia.mat", Dict(
                "RTlqn" => value.(RTlqn),
-               "T" => value.(T)
+               "T" => value.(T),
                "NCopt" => value.(NC)
        );)
