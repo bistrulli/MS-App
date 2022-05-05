@@ -47,9 +47,9 @@ public class Client implements Runnable {
 				// in questo modo tratto sia i client che i server in modo uniforme per il monitoraggio del tempo di risposta
 				this.task.getEnqueueTime().put(this.clietId.toString(), System.nanoTime());
 
-//				SimpleTask.getLogger().debug(String.format("%s thinking", thinking));
-//				TimeUnit.MILLISECONDS.sleep(Double.valueOf(this.dist.sample()).longValue());
-//
+				//SimpleTask.getLogger().debug(String.format("%s thinking", thinking));
+				TimeUnit.MILLISECONDS.sleep(Double.valueOf(this.dist.sample()).longValue());
+
 //				SimpleTask.getLogger().debug(String.format("%s sending", this.task.getName()));
 //				this.task.getState().get("think").decrementAndGet();
 				
@@ -57,7 +57,7 @@ public class Client implements Runnable {
 				Unirest.get(URI.create("http://" + Client.getTier1Host() + ":3000/?id=" + this.clietId.toString()
 						+ "&entry=e1" + "&snd=think").toString()).header("Connection", "close").asString();
 
-				//thinking = this.task.getState().get("think").incrementAndGet();
+//				thinking = this.task.getState().get("think").incrementAndGet();
 
 //				if (Client.getToKill().get() > 0) {
 //					Client.toKill.decrementAndGet();
@@ -69,8 +69,10 @@ public class Client implements Runnable {
 						System.nanoTime()));
 				
 			}
-			//thinking = this.task.getState().get("think").decrementAndGet();
+//			thinking = this.task.getState().get("think").decrementAndGet();
 			SimpleTask.getLogger().debug(String.format(" user %s stopped", this.clietId));
+		} catch (InterruptedException e2) {
+			e2.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
