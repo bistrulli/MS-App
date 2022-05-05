@@ -1,6 +1,6 @@
 using Printf,Ipopt,MadNLP,Plots,MadNLPMumps,JuMP,MAT,ProgressBars,ParameterJuMP,Statistics
 
-DATA = matread("../execution/data/3tier_learn3.mat")
+DATA = matread("../execution/data/3tier_learn2.mat")
 
 nzIdz=sum(DATA["RTm"],dims=2).!=0
 
@@ -73,7 +73,7 @@ register(model, :min_, 1, f, autodiff=true) #∇f)
 @constraint(model,[p=1:npoints],X[:,p].<=(RTm[p,:].*Tm[p,:]))
 #@constraint(model,[i=1:size(P2,1)],P[i,i]==0)
 # @constraint(model,P[1,1]==0)
-#@constraint(model,MU[1]==3.2755)
+#@constraint(model,MU[1]==1/0.3019)
 
 #@constraint(model,MU.==[1/0.3019,1/0.1053,1/0.1546])
 
