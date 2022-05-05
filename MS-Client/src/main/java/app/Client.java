@@ -2,6 +2,7 @@ package app;
 
 import java.net.URI;
 import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -26,12 +27,14 @@ public class Client implements Runnable {
 	private Boolean dying = null;
 	private static String tier1Host = null;
 	public static AtomicBoolean isStarted = new AtomicBoolean(false);
+	private ThreadLocalRandom rnd=null;
 
 	public Client(SimpleTask task, Long ttime) {
 		this.setThinkTime(ttime);
 		this.task = task;
 		this.clietId = UUID.randomUUID();
 		this.dying = false; 
+		this.rnd = ThreadLocalRandom.current();
 	}
 
 	public void run() {
@@ -48,7 +51,8 @@ public class Client implements Runnable {
 				this.task.getEnqueueTime().put(this.clietId.toString(), System.nanoTime());
 
 				//SimpleTask.getLogger().debug(String.format("%s thinking", thinking));
-				TimeUnit.MILLISECONDS.sleep(Double.valueOf(this.dist.sample()).longValue());
+//				TimeUnit.MILLISECONDS.sleep(Double.valueOf(this.dist.sample()).longValue());
+				TimeUnit.MILLISECONDS.sleep(Double.valueOf(this.expDist()).longValue());
 
 //				SimpleTask.getLogger().debug(String.format("%s sending", this.task.getName()));
 //				this.task.getState().get("think").decrementAndGet();
@@ -90,7 +94,7 @@ public class Client implements Runnable {
 
 	public void setThinkTime(long thinkTime) {
 		this.thinkTime = thinkTime;
-		this.dist = new ExponentialDistribution(thinkTime);
+		this.dist = new ExponentialDistribution(this.thinkTime);
 	}
 
 	public static AtomicInteger getToKill() {
@@ -107,6 +111,11 @@ public class Client implements Runnable {
 
 	public static void setTier1Host(String tier1Host) {
 		Client.tier1Host = tier1Host;
+	}
+	
+	public double expDist() {
+		double y0=this.rnd.nextDouble();
+		return -(Long.valueOf(this.getThinkTime()).doubleValue())*Math.log(1-y0);
 	}
 
 }
