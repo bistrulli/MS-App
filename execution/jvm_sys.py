@@ -141,7 +141,7 @@ class jvm_sys(system_interface):
         r.set("started", "0")
         r.close()
         
-        subprocess.Popen([javaCmd, "-Xmx15G", "-Xms30G",
+        subprocess.Popen([javaCmd, "-Xmx30G", "-Xms30G",
                          "-Djava.compiler=NONE", "-jar",
                          '%sMS-Client/target/MS-Client-0.0.1-jar-with-dependencies.jar' % (self.sysRootPath),
                          '--initPop', '%d' % (pop), '--jedisHost', 'localhost', '--tier1Host', 'localhost',
@@ -199,7 +199,7 @@ class jvm_sys(system_interface):
             self.sys.append(self.findProcessIdByName("MS-Tier2-0.0.1")[0])
             
             subprocess.Popen([javaCmd,
-                            "-Xmx15G", "-Xms30G",
+                            "-Xmx30G", "-Xms30G",
                              # "-XX:ParallelGCThreads=1",
                              # "-XX:+UnlockExperimentalVMOptions","-XX:+UseEpsilonGC",
                              "-Djava.compiler=NONE", "-jar",
@@ -220,7 +220,7 @@ class jvm_sys(system_interface):
                 aff[1,:]=[7,10]
             
             subprocess.Popen([javaCmd,
-                             "-Xmx15G", "-Xms15G",
+                             "-Xmx30G", "-Xms30G",
                              "-Djava.compiler=NONE", "-jar", "-Xint",
                              '%sMS-Tier2/target/MS-Tier2-0.0.1-jar-with-dependencies.jar' % (self.sysRootPath),
                              '--cpuEmu', "%d" % (cpuEmu), '--jedisHost', 'localhost',
@@ -229,7 +229,7 @@ class jvm_sys(system_interface):
             self.sys.append(self.findProcessIdByName("MS-Tier2-0.0.1")[0])
             
             subprocess.Popen([javaCmd,
-                             "-Xmx15G", "-Xms15G",
+                             "-Xmx30G", "-Xms30G",
                              "-Djava.compiler=NONE", "-jar", "-Xint",
                              '%sMS-Tier1/target/MS-Tier1-0.0.1-jar-with-dependencies.jar' % (self.sysRootPath),
                              '--cpuEmu', "%d" % (cpuEmu), '--jedisHost', 'localhost',
