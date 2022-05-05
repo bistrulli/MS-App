@@ -69,7 +69,7 @@ public class Client implements Runnable {
 						System.nanoTime()));
 				
 			}
-			thinking = this.task.getState().get("think").decrementAndGet();
+			//thinking = this.task.getState().get("think").decrementAndGet();
 			SimpleTask.getLogger().debug(String.format(" user %s stopped", this.clietId));
 		} catch (Exception e) {
 			e.printStackTrace();
