@@ -38,7 +38,7 @@ public class Client implements Runnable {
 		try {
 
 			Client.isStarted.set(true);
-			int thinking = this.task.getState().get("think").incrementAndGet();
+			//int thinking = this.task.getState().get("think").incrementAndGet();
 
 			while (!this.dying) {
 				
@@ -71,8 +71,6 @@ public class Client implements Runnable {
 			}
 			thinking = this.task.getState().get("think").decrementAndGet();
 			SimpleTask.getLogger().debug(String.format(" user %s stopped", this.clietId));
-		} catch (InterruptedException e2) {
-			e2.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
