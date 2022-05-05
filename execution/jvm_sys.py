@@ -141,7 +141,7 @@ class jvm_sys(system_interface):
         r.set("started", "0")
         r.close()
         
-        subprocess.Popen([javaCmd, "-Xmx15G", "-Xms15G",
+        subprocess.Popen([javaCmd, "-Xmx15G", "-Xms30G",
                          "-Djava.compiler=NONE", "-jar",
                          '%sMS-Client/target/MS-Client-0.0.1-jar-with-dependencies.jar' % (self.sysRootPath),
                          '--initPop', '%d' % (pop), '--jedisHost', 'localhost', '--tier1Host', 'localhost',
@@ -188,7 +188,7 @@ class jvm_sys(system_interface):
         if(not self.isCpu):
             
             subprocess.Popen([javaCmd,
-                            "-Xmx15G", "-Xms15G",
+                            "-Xmx15G", "-Xms30G",
                              # "-XX:ParallelGCThreads=1",
                              # "-XX:+UnlockExperimentalVMOptions","-XX:+UseEpsilonGC",
                              "-Djava.compiler=NONE", "-jar",
@@ -199,7 +199,7 @@ class jvm_sys(system_interface):
             self.sys.append(self.findProcessIdByName("MS-Tier2-0.0.1")[0])
             
             subprocess.Popen([javaCmd,
-                            "-Xmx15G", "-Xms15G",
+                            "-Xmx15G", "-Xms30G",
                              # "-XX:ParallelGCThreads=1",
                              # "-XX:+UnlockExperimentalVMOptions","-XX:+UseEpsilonGC",
                              "-Djava.compiler=NONE", "-jar",
@@ -540,7 +540,7 @@ if __name__ == "__main__":
             sys.stopClient()
             sys.stopSystem()
             
-            savemat("./data/3tier_learn3.mat", {"RTm":rtExp,"rtCI":rtCI,"Tm":tExp,"tCI":tCI,"Cli":W,"NC":NC})
+            savemat("./data/3tier_learn4.mat", {"RTm":rtExp,"rtCI":rtCI,"Tm":tExp,"tCI":tCI,"Cli":W,"NC":NC})
         
         
             

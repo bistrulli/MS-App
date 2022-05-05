@@ -22,7 +22,10 @@ end
 #model = Model(()->MadNLP.Optimizer(linear_solver=MadNLPLapackCPU,max_iter=100000))
 model = Model(Ipopt.Optimizer)
 #set_optimizer_attribute(model, "linear_solver", "pardiso")
-#set_optimizer_attribute(model, "max_iter", 20000)
+set_optimizer_attribute(model, "max_iter", 20000)
+set_optimizer_attribute(model, "derivative_test", "first-order")
+set_optimizer_attribute(model, "check_derivatives_for_naninf", "yes")
+
 #set_optimizer_attribute(model, "tol", 10^-10)
 #set_optimizer_attribute(model, "print_level", 0)
 
@@ -41,7 +44,7 @@ jump=[ -1   +1   +0;
 npoints=size(RTm,1)
 
 #f(x::T, y::T) where {T<:Real} = -(-x-0+((-x+0)^2+10^-100)^(1.0/2))/2.0
-f(x::T) where {T<:Real} = -(-x+((-x)^2+10^-100)^(1.0/2))/2.0
+f(x::T) where {T<:Real} = -(-x+((-x)^2+10^-10)^(1.0/2))/2.0
 # function ∇f(g::AbstractVector{T}, x::T, y::T) where {T<:Real}
 #     g[1] = 1/2 - (2*x - 2*y)/(4*((x - y)^2 + 1/10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000)^(1/2))
 #     g[2] = (2*x - 2*y)/(4*((x - y)^2 + 1/10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000)^(1/2)) + 1/2
@@ -128,7 +131,6 @@ for p=1:npoints
             #@constraint(model,RTlqn[i,p]==sum(P2[i,j]*RTm[p,j] for j=1:size(jump,2))+RTs[i,p])
             @constraint(model,ERT_abs[i,p]>=(RTlqn[i,p]-RTm[p,i])/RTm[p,i])
             @constraint(model,ERT_abs[i,p]>=(-RTlqn[i,p]+RTm[p,i])/RTm[p,i])
-
         end
 end
 
