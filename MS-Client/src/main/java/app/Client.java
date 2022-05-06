@@ -10,15 +10,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.apache.commons.math3.distribution.AbstractRealDistribution;
 import org.apache.commons.math3.distribution.ExponentialDistribution;
 
-import com.google.api.client.http.GenericUrl;
-import com.google.api.client.http.HttpRequest;
-import com.google.api.client.http.HttpRequestFactory;
-import com.google.api.client.http.javanet.NetHttpTransport;
-
 import Server.SimpleTask;
 import kong.unirest.Unirest;
 import monitoring.rtSample;
 import net.spy.memcached.MemcachedClient;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 
 public class Client implements Runnable {
 
@@ -48,10 +45,6 @@ public class Client implements Runnable {
 			Client.isStarted.set(true);
 			//int thinking = this.task.getState().get("think").incrementAndGet();
 			
-			HttpRequestFactory requestFactory= new NetHttpTransport().createRequestFactory();
-			HttpRequest request = requestFactory.buildGetRequest(
-					  new GenericUrl("http://" + Client.getTier1Host() + ":3000/?id=" + this.clietId.toString()
-						+ "&entry=e1" + "&snd=think")).setConnectTimeout(0).setReadTimeout(0);
 
 			while (!this.dying) {
 				
@@ -68,11 +61,9 @@ public class Client implements Runnable {
 //				this.task.getState().get("think").decrementAndGet();
 				
 				
-//				Unirest.get(URI.create("http://" + Client.getTier1Host() + ":3000/?id=" + this.clietId.toString()
-//						+ "&entry=e1" + "&snd=think").toString()).header("Connection", "close").asString();
+				Unirest.get(URI.create("http://" + Client.getTier1Host() + ":3000/?id=" + this.clietId.toString()
+						+ "&entry=e1" + "&snd=think").toString()).header("Connection", "close").asString();
 				
-				
-				request.execute();
 
 //				thinking = this.task.getState().get("think").incrementAndGet();
 

@@ -136,7 +136,7 @@ class jvm_sys(system_interface):
         self.tier_socket = {}
     
     def startClient(self, pop):
-        r = Client("localhost:11211")
+        r = Client("127.0.0.1:11211")
         r.set("stop", "0")
         r.set("started", "0")
         r.close()
@@ -144,7 +144,7 @@ class jvm_sys(system_interface):
         subprocess.Popen([javaCmd, "-Xmx30G", "-Xms30G",
                          "-Djava.compiler=NONE", "-jar",
                          '%sMS-Client/target/MS-Client-0.0.1-jar-with-dependencies.jar' % (self.sysRootPath),
-                         '--initPop', '%d' % (pop), '--jedisHost', 'localhost', '--tier1Host', 'localhost',
+                         '--initPop', '%d' % (pop), '--jedisHost', 'localhost', '--tier1Host', '127.0.0.1',
                          '--queues', '[\"think\", \"e1_bl\", \"e1_ex\", \"t1_hw\",\"e2_bl\", \"e2_ex\", \"t2_hw\"]'])
         
         self.waitClient()
@@ -205,7 +205,7 @@ class jvm_sys(system_interface):
                              "-Djava.compiler=NONE", "-jar",
                              '%sMS-Tier1/target/MS-Tier1-0.0.1-jar-with-dependencies.jar' % (self.sysRootPath),
                              '--cpuEmu', "%d" % (cpuEmu), '--jedisHost', 'localhost',
-                             "--tier2Host", "localhost"])
+                             "--tier2Host", "127.0.0.1"])
             
             self.waitTier1()
             self.sys.append(self.findProcessIdByName("MS-Tier1-0.0.1")[0])
@@ -233,7 +233,7 @@ class jvm_sys(system_interface):
                              "-Djava.compiler=NONE", "-jar", "-Xint",
                              '%sMS-Tier1/target/MS-Tier1-0.0.1-jar-with-dependencies.jar' % (self.sysRootPath),
                              '--cpuEmu', "%d" % (cpuEmu), '--jedisHost', 'localhost',
-                             "--tier2Host", "localhost",
+                             "--tier2Host", "127.0.0.1",
                              "--aff","%d-%d"%(aff[0,0],aff[0,1])])
             self.waitTier1()
             self.sys.append(self.findProcessIdByName("MS-Tier1-0.0.1")[0])
@@ -278,11 +278,11 @@ class jvm_sys(system_interface):
         connected = False
         limit = 1000
         atpt = 0
-        base_client = Client(("localhost", 11211))
+        base_client = Client(("127.0.0.1", 11211))
         base_client.set("test_ex", "1")
         while(atpt < limit and not connected):
             try:
-                r = req.get('http://localhost:3000?entry=e1&snd=test')
+                r = req.get('http://127.0.0.1:3000?entry=e1&snd=test')
                 connected = True
                 break
             except:
@@ -300,11 +300,11 @@ class jvm_sys(system_interface):
         connected = False
         limit = 1000
         atpt = 0
-        base_client = Client(("localhost", 11211))
+        base_client = Client(("127.0.0.1", 11211))
         base_client.set("test_ex", "1")
         while(atpt < limit and not connected):
             try:
-                r = req.get('http://localhost:3001?entry=e2&snd=test')
+                r = req.get('http://127.0.0.1:3001?entry=e2&snd=test')
                 connected = True
                 break
             except:
@@ -322,14 +322,14 @@ class jvm_sys(system_interface):
         connected = False
         limit = 10000
         atpt = 0
-        base_client = Client(("localhost", 11211))
+        base_client = Client(("127.0.0.1", 11211))
         while(atpt < limit and (base_client.get("started") == None or base_client.get("started").decode('UTF-8') == "0")):
            time.sleep(0.2)
            atpt += 1
         
     def waitMemCached(self):
         connected = False
-        base_client = Client(("localhost", 11211))
+        base_client = Client(("127.0.0.1", 11211))
         for i in range(1000):
             try:
                 base_client.get('some_key')
@@ -438,7 +438,7 @@ class jvm_sys(system_interface):
     
     def testSystem(self):
         self.startSys()
-        r = Client("localhost:11211")
+        r = Client("127.0.0.1:11211")
         try:
             for k in self.keys:
                 if(k == "think" or k == "t1_hw" or k == "t2_hw"):
