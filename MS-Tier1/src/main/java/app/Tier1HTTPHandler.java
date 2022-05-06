@@ -48,8 +48,8 @@ public class Tier1HTTPHandler extends TierHttpHandler {
 		try {
 			this.measureEgress();
 			resp = Unirest.get(URI.create(
-					"http://" + Tier1HTTPHandler.getTier2Host() + ":3001/?id="+reqParams.get("id")+ "&entry=e2" + "&snd=" + this.getName())
-					.toString()).header("Connection", "close").asString();
+					"http://" + Tier1HTTPHandler.getTier2Host() + ":3001/?id="+reqParams.get("id")+ "&entry=e2" + "&snd=" + this.getName()
+					+"&stime="+System.nanoTime()).toString()).header("Connection", "close").asString();
 			this.measureReturn();
 		} catch (UnirestException e) {
 			e.printStackTrace();

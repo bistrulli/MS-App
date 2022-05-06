@@ -62,7 +62,7 @@ public class Client implements Runnable {
 				
 				
 				Unirest.get(URI.create("http://" + Client.getTier1Host() + ":3000/?id=" + this.clietId.toString()
-						+ "&entry=e1" + "&snd=think").toString()).header("Connection", "close").asString();
+						+ "&entry=e1" + "&snd=think"+"&stime="+System.nanoTime()).toString()).header("Connection", "close").asString();
 				
 
 //				thinking = this.task.getState().get("think").incrementAndGet();
