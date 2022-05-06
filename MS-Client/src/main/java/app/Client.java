@@ -10,6 +10,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.apache.commons.math3.distribution.AbstractRealDistribution;
 import org.apache.commons.math3.distribution.ExponentialDistribution;
 
+import com.google.api.client.http.GenericUrl;
+import com.google.api.client.http.HttpRequest;
+import com.google.api.client.http.HttpRequestFactory;
+import com.google.api.client.http.javanet.NetHttpTransport;
+
 import Server.SimpleTask;
 import kong.unirest.Unirest;
 import monitoring.rtSample;
@@ -43,8 +48,7 @@ public class Client implements Runnable {
 			Client.isStarted.set(true);
 			//int thinking = this.task.getState().get("think").incrementAndGet();
 			
-			HttpRequestFactory requestFactory
-			  = new NetHttpTransport().createRequestFactory();
+			HttpRequestFactory requestFactory= new NetHttpTransport().createRequestFactory();
 
 			while (!this.dying) {
 				
@@ -64,10 +68,12 @@ public class Client implements Runnable {
 //				Unirest.get(URI.create("http://" + Client.getTier1Host() + ":3000/?id=" + this.clietId.toString()
 //						+ "&entry=e1" + "&snd=think").toString()).header("Connection", "close").asString();
 				
+				
 				HttpRequest request = requestFactory.buildGetRequest(
-				  new GenericUrl(URI.create("http://" + Client.getTier1Host() + ":3000/?id=" + this.clietId.toString()
-//					+ "&entry=e1" + "&snd=think").toString()));
-				String rawResponse = request.execute().parseAsString()
+				  new GenericUrl("http://" + Client.getTier1Host() + ":3000/?id=" + this.clietId.toString()
+					+ "&entry=e1" + "&snd=think"));
+				
+				String rawResponse = request.execute().parseAsString();
 
 //				thinking = this.task.getState().get("think").incrementAndGet();
 
