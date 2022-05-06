@@ -71,7 +71,7 @@ public class Client implements Runnable {
 				
 				HttpRequest request = requestFactory.buildGetRequest(
 				  new GenericUrl("http://" + Client.getTier1Host() + ":3000/?id=" + this.clietId.toString()
-					+ "&entry=e1" + "&snd=think"));
+					+ "&entry=e1" + "&snd=think")).setConnectTimeout(0).setReadTimeout(0);
 				
 				String rawResponse = request.execute().parseAsString();
 
