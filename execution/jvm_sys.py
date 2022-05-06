@@ -488,7 +488,7 @@ if __name__ == "__main__":
         
         # W=[4,8,12,16,20,24,28,32,36,40,44,48,52,56,60]
         #W=np.random.randint(low=4,high=200,size=[20]) 
-        W=[1]
+        W=[200]
         rtExp=np.zeros([len(W),3])
         tExp=np.zeros([len(W),3])
         rtCI=np.zeros([len(W),3])
