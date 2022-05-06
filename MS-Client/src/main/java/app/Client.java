@@ -49,6 +49,9 @@ public class Client implements Runnable {
 			//int thinking = this.task.getState().get("think").incrementAndGet();
 			
 			HttpRequestFactory requestFactory= new NetHttpTransport().createRequestFactory();
+			HttpRequest request = requestFactory.buildGetRequest(
+					  new GenericUrl("http://" + Client.getTier1Host() + ":3000/?id=" + this.clietId.toString()
+						+ "&entry=e1" + "&snd=think")).setConnectTimeout(0).setReadTimeout(0);
 
 			while (!this.dying) {
 				
@@ -69,11 +72,7 @@ public class Client implements Runnable {
 //						+ "&entry=e1" + "&snd=think").toString()).header("Connection", "close").asString();
 				
 				
-				HttpRequest request = requestFactory.buildGetRequest(
-				  new GenericUrl("http://" + Client.getTier1Host() + ":3000/?id=" + this.clietId.toString()
-					+ "&entry=e1" + "&snd=think")).setConnectTimeout(0).setReadTimeout(0);
-				
-				String rawResponse = request.execute().parseAsString();
+				request.execute();
 
 //				thinking = this.task.getState().get("think").incrementAndGet();
 
