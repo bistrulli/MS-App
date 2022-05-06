@@ -27,13 +27,13 @@ public class Client implements Runnable {
 	private Boolean dying = null;
 	private static String tier1Host = null;
 	public static AtomicBoolean isStarted = new AtomicBoolean(false);
-	private ThreadLocalRandom rnd=null;
+	private ThreadLocalRandom rnd = null;
 
 	public Client(SimpleTask task, Long ttime) {
 		this.setThinkTime(ttime);
 		this.task = task;
 		this.clietId = UUID.randomUUID();
-		this.dying = false; 
+		this.dying = false;
 		this.rnd = ThreadLocalRandom.current();
 	}
 
@@ -42,6 +42,9 @@ public class Client implements Runnable {
 
 			Client.isStarted.set(true);
 			//int thinking = this.task.getState().get("think").incrementAndGet();
+			
+			HttpRequestFactory requestFactory
+			  = new NetHttpTransport().createRequestFactory();
 
 			while (!this.dying) {
 				
@@ -58,8 +61,13 @@ public class Client implements Runnable {
 //				this.task.getState().get("think").decrementAndGet();
 				
 				
-				Unirest.get(URI.create("http://" + Client.getTier1Host() + ":3000/?id=" + this.clietId.toString()
-						+ "&entry=e1" + "&snd=think").toString()).header("Connection", "close").asString();
+//				Unirest.get(URI.create("http://" + Client.getTier1Host() + ":3000/?id=" + this.clietId.toString()
+//						+ "&entry=e1" + "&snd=think").toString()).header("Connection", "close").asString();
+				
+				HttpRequest request = requestFactory.buildGetRequest(
+				  new GenericUrl(URI.create("http://" + Client.getTier1Host() + ":3000/?id=" + this.clietId.toString()
+//					+ "&entry=e1" + "&snd=think").toString()));
+				String rawResponse = request.execute().parseAsString()
 
 //				thinking = this.task.getState().get("think").incrementAndGet();
 
@@ -112,10 +120,10 @@ public class Client implements Runnable {
 	public static void setTier1Host(String tier1Host) {
 		Client.tier1Host = tier1Host;
 	}
-	
+
 	public double expDist() {
-		double y0=this.rnd.nextDouble();
-		return -(Long.valueOf(this.getThinkTime()).doubleValue())*Math.log(1-y0);
+		double y0 = this.rnd.nextDouble();
+		return -(Long.valueOf(this.getThinkTime()).doubleValue()) * Math.log(1 - y0);
 	}
 
 }
