@@ -499,7 +499,7 @@ if __name__ == "__main__":
             
             #NC.append([np.inf,np.random.randint(low=1,high=13),np.random.randint(low=1,high=13)])
             
-            NC.append([np.inf,1,10])
+            NC.append([np.inf,20,20])
             
             sys = jvm_sys("../", isCpu)
             
