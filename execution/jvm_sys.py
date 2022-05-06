@@ -142,8 +142,8 @@ class jvm_sys(system_interface):
         r.close()
         
         subprocess.Popen([javaCmd, "-Xmx30G", "-Xms30G",
-                         "-Djava.compiler=NONE", "-jar",
-                         '%sMS-Client/target/MS-Client-0.0.1-jar-with-dependencies.jar' % (self.sysRootPath),
+                         #"-Djava.compiler=NONE", 
+                         "-jar",'%sMS-Client/target/MS-Client-0.0.1-jar-with-dependencies.jar' % (self.sysRootPath),
                          '--initPop', '%d' % (pop), '--jedisHost', 'localhost', '--tier1Host', '127.0.0.1',
                          '--queues', '[\"think\", \"e1_bl\", \"e1_ex\", \"t1_hw\",\"e2_bl\", \"e2_ex\", \"t2_hw\"]'])
         
@@ -191,8 +191,8 @@ class jvm_sys(system_interface):
                             "-Xmx15G", "-Xms30G",
                              # "-XX:ParallelGCThreads=1",
                              # "-XX:+UnlockExperimentalVMOptions","-XX:+UseEpsilonGC",
-                             "-Djava.compiler=NONE", "-jar",
-                             '%sMS-Tier2/target/MS-Tier2-0.0.1-jar-with-dependencies.jar' % (self.sysRootPath),
+                             #"-Djava.compiler=NONE", 
+                             "-jar",'%sMS-Tier2/target/MS-Tier2-0.0.1-jar-with-dependencies.jar' % (self.sysRootPath),
                              '--cpuEmu', "%d" % (cpuEmu), '--jedisHost', 'localhost'])
             
             self.waitTier2()
@@ -202,8 +202,8 @@ class jvm_sys(system_interface):
                             "-Xmx30G", "-Xms30G",
                              # "-XX:ParallelGCThreads=1",
                              # "-XX:+UnlockExperimentalVMOptions","-XX:+UseEpsilonGC",
-                             "-Djava.compiler=NONE", "-jar",
-                             '%sMS-Tier1/target/MS-Tier1-0.0.1-jar-with-dependencies.jar' % (self.sysRootPath),
+                             #"-Djava.compiler=NONE", 
+                             "-jar",'%sMS-Tier1/target/MS-Tier1-0.0.1-jar-with-dependencies.jar' % (self.sysRootPath),
                              '--cpuEmu', "%d" % (cpuEmu), '--jedisHost', 'localhost',
                              "--tier2Host", "127.0.0.1"])
             
@@ -221,8 +221,8 @@ class jvm_sys(system_interface):
             
             subprocess.Popen([javaCmd,
                              "-Xmx30G", "-Xms30G",
-                             "-Djava.compiler=NONE", "-jar", "-Xint",
-                             '%sMS-Tier2/target/MS-Tier2-0.0.1-jar-with-dependencies.jar' % (self.sysRootPath),
+                             #"-Djava.compiler=NONE", "-Xint"
+                             "-jar",'%sMS-Tier2/target/MS-Tier2-0.0.1-jar-with-dependencies.jar' % (self.sysRootPath),
                              '--cpuEmu', "%d" % (cpuEmu), '--jedisHost', 'localhost',
                              "--aff","%d-%d"%(aff[1,0],aff[1,1])])
             self.waitTier2()
@@ -230,8 +230,8 @@ class jvm_sys(system_interface):
             
             subprocess.Popen([javaCmd,
                              "-Xmx30G", "-Xms30G",
-                             "-Djava.compiler=NONE", "-jar", "-Xint",
-                             '%sMS-Tier1/target/MS-Tier1-0.0.1-jar-with-dependencies.jar' % (self.sysRootPath),
+                             #"-Djava.compiler=NONE", "-Xint" 
+                             "-jar",'%sMS-Tier1/target/MS-Tier1-0.0.1-jar-with-dependencies.jar' % (self.sysRootPath),
                              '--cpuEmu', "%d" % (cpuEmu), '--jedisHost', 'localhost',
                              "--tier2Host", "127.0.0.1",
                              "--aff","%d-%d"%(aff[0,0],aff[0,1])])
