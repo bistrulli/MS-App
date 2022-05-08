@@ -1,0 +1,19 @@
+clear
+N=5000;
+
+mean1=11;
+std1=5;
+mean2=9;
+std2=0.00001;
+
+
+X1=mean1 + std1.*randn(N,1);
+X2=mean2 + std2.*randn(N,1);
+
+a1=min(X1);
+b1=max(X1);
+
+
+Y=mean(min(X1,X2));
+Y1=min(mean(X1),mean(X2));
+Y2=

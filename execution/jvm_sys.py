@@ -486,7 +486,7 @@ if __name__ == "__main__":
         N=30
         K=30
         
-        W=[4,8,12,16,20,24,28,32,36,40,44,48,52,56,60]
+        W=[1,2,3,4,8,12,16,20,24,28,32,36,40,44,48,52,56,60]
         #W=np.random.randint(low=4,high=200,size=[20]) 
         rtExp=np.zeros([len(W),3])
         tExp=np.zeros([len(W),3])
@@ -498,7 +498,7 @@ if __name__ == "__main__":
             
             #NC.append([np.inf,np.random.randint(low=1,high=13),np.random.randint(low=1,high=13)])
             
-            NC.append([np.inf,3,5])
+            NC.append([np.inf,3,1])
             
             sys = jvm_sys("../", isCpu)
             
@@ -539,7 +539,7 @@ if __name__ == "__main__":
             sys.stopClient()
             sys.stopSystem()
             
-            savemat("./data/3tier_learn4.mat", {"RTm":rtExp,"rtCI":rtCI,"Tm":tExp,"tCI":tCI,"Cli":W,"NC":NC})
+            savemat("./data/3tier_learn5.mat", {"RTm":rtExp,"rtCI":rtCI,"Tm":tExp,"tCI":tCI,"Cli":W,"NC":NC})
         
         
             

@@ -1,6 +1,6 @@
 using Printf,Ipopt,MadNLP,Plots,MadNLPMumps,JuMP,MAT,ProgressBars,ParameterJuMP,Statistics
 
-DATA = matread("../execution/data/3tier_learn2.mat")
+DATA = matread("../execution/data/3tier_learn4.mat")
 
 nzIdz=sum(DATA["RTm"],dims=2).!=0
 
@@ -21,7 +21,7 @@ end
 
 #model = Model(()->MadNLP.Optimizer(linear_solver=MadNLPLapackCPU,max_iter=100000))
 model = Model(Ipopt.Optimizer)
-#set_optimizer_attribute(model, "linear_solver", "pardiso")
+# set_optimizer_attribute(model, "linear_solver", "pardiso")
 set_optimizer_attribute(model, "max_iter", 20000)
 set_optimizer_attribute(model, "derivative_test", "first-order")
 set_optimizer_attribute(model, "check_derivatives_for_naninf", "yes")
