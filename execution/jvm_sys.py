@@ -494,11 +494,11 @@ if __name__ == "__main__":
         tCI=np.zeros([len(W),3])
         NC=[]
         
-        for w in range(len(W)) :
+        for w in range(7) :
             
             #NC.append([np.inf,np.random.randint(low=1,high=13),np.random.randint(low=1,high=13)])
             
-            NC.append([np.inf,3,1])
+            NC.append([np.inf,1,5])
             
             sys = jvm_sys("../", isCpu)
             
@@ -539,7 +539,7 @@ if __name__ == "__main__":
             sys.stopClient()
             sys.stopSystem()
             
-            savemat("./data/3tier_learn5.mat", {"RTm":rtExp,"rtCI":rtCI,"Tm":tExp,"tCI":tCI,"Cli":W,"NC":NC})
+            savemat("./data/3tier_learn6.mat", {"RTm":rtExp,"rtCI":rtCI,"Tm":tExp,"tCI":tCI,"Cli":W,"NC":NC})
         
         
             

@@ -1,6 +1,6 @@
 using Printf,Ipopt,MadNLP,Plots,MadNLPMumps,JuMP,MAT,ProgressBars,ParameterJuMP,Statistics
 
-DATA = matread("../execution/data/3tier_learn5.mat")
+DATA = matread("../execution/data/3tier_learn5_all.mat")
 
 nzIdz=sum(DATA["RTm"],dims=2).!=0
 
