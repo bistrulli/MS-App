@@ -12,7 +12,7 @@
 % stem(sort(Tl(Idx,2)))
 % legend(["TClient_m","TClient_p"])
 
-load("/Users/emilio/git/MS-App/execution/data/3tier_learn5_all.mat");
+load("/Users/emilio/git/MS-App/execution/data/3tier_learn5.mat");
 load("./fromJulia.mat")
 
 CIdx=sum(sum(RTm,2)~=0);
@@ -24,18 +24,18 @@ CIdx=sum(sum(RTm,2)~=0);
 %  0.00253123  0.0];
 % MU=[3.2865425244638855,9.781509324351875];
 
-P=[  0.00403763  0.956336   0.0396268
- 0.0249656   0.0145703  0.960464
- 0.970889    0.0291113  6.51862e-8];
+P=[ 0.0411824   0.958791    2.64373e-5
+ 2.12782e-8  9.64364e-9  1.0
+ 0.958716    0.0412837   7.76466e-9];
 
-P2=[  0.0         0.955895    0.0396268
- 4.96823e-9  0.0         0.960464
- 0.034292    2.15546e-8  0.0
+P2=[    -4.11822e-10   0.957411      2.64366e-5
+  1.98564e-8   -9.64357e-17   1.0
+  0.0292625     2.04815e-8   -7.7646e-17
 ];
 
-MU=[  3.154003969084189
- 5.507848290981696
- 6.6202355754095805];
+MU=[    2.6886090256059068
+ 9.496661662406366
+ 6.6521236275757305];
 
 
 RTl=zeros(CIdx,size(RTm,2));
@@ -57,7 +57,7 @@ box on
 grid on
 plot(Cli(1:CIdx),RTm(1:CIdx,:),"linewidth",1.1)
 plot(Cli(1:CIdx),RTl(:,:),"-.","linewidth",1.3)
-plot(Cli(1:CIdx),RTlqn(:,1:CIdx)',"--","linewidth",1.3)
+% plot(Cli(1:CIdx),RTlqn(:,1:CIdx)',"--","linewidth",1.3)
 legend(["RT_m","RT_p"])
 
 figure
@@ -66,7 +66,7 @@ box on
 grid on
 plot(Cli(1:CIdx),Tm(1:CIdx,:),"linewidth",1.1)
 plot(Cli(1:CIdx),Tl(:,:),"-.","linewidth",1.3)
-plot(Cli(1:CIdx),sum(T([1,2,3],1:CIdx)),"--","linewidth",1.3)
+% plot(Cli(1:CIdx),sum(T([1,2,3],1:CIdx)),"--","linewidth",1.3)
 legend(["T_m","T_p"])
 
 figure
