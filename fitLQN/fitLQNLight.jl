@@ -1,6 +1,6 @@
 using SCIP,AmplNLWriter,Couenne_jll,Printf,Ipopt,MadNLP,Plots,MadNLPMumps,JuMP,MAT,ProgressBars,ParameterJuMP,Statistics
 
-DATA = matread("../execution/data/3tier_all2.mat")
+DATA = matread("../execution/data/3tier_all3.mat")
 
 nzIdz=sum(DATA["RTm"],dims=2).!=0
 
@@ -20,9 +20,9 @@ end
 
 
 #model = Model(()->MadNLP.Optimizer(linear_solver=MadNLPLapackCPU,max_iter=100000))
-#model = Model(Ipopt.Optimizer)
+model = Model(Ipopt.Optimizer)
 #model = Model(() -> AmplNLWriter.Optimizer(Couenne_jll.amplexe))
-model = Model(SCIP.Optimizer)
+#model = Model(SCIP.Optimizer)
 # set_optimizer_attribute(model, "linear_solver", "pardiso")
 #set_optimizer_attribute(model, "max_iter", 20000)
 # set_optimizer_attribute(model, "derivative_test", "first-order")
@@ -117,27 +117,27 @@ obj=[]
 for p=1:npoints
         @constraint(model,sum(X[:,p])==Cli[p])
         @constraints(model,begin
-                E_abs[1,p]>=(Tm[p,1]-sum(T[[1,2,3],p]))/Tm[p,1]
-                E_abs[1,p]>=-(Tm[p,1]-sum(T[[1,2,3],p]))/Tm[p,1]
+                E_abs[1,p]>=(Tm[p,1]-sum(T[[1,2,3],p]))
+                E_abs[1,p]>=-(Tm[p,1]-sum(T[[1,2,3],p]))
 
-                E_abs[2,p]>=(Tm[p,2]-sum(T[[4,5,6],p]))/Tm[p,2]
-                E_abs[2,p]>=-(Tm[p,2]-sum(T[[4,5,6],p]))/Tm[p,2]
+                E_abs[2,p]>=(Tm[p,2]-sum(T[[4,5,6],p]))
+                E_abs[2,p]>=-(Tm[p,2]-sum(T[[4,5,6],p]))
 
-                E_abs[3,p]>=(Tm[p,3]-sum(T[[7,8,9],p]))/Tm[p,3]
-                E_abs[3,p]>=-(Tm[p,3]-sum(T[[7,8,9],p]))/Tm[p,3]
+                E_abs[3,p]>=(Tm[p,3]-sum(T[[7,8,9],p]))
+                E_abs[3,p]>=-(Tm[p,3]-sum(T[[7,8,9],p]))
         end)
 
         for i=1:size(jump,2)
             @NLconstraint(model,RTlqn[i,p]==sum(P[i,j]*P2[i,j]*RTlqn[j,p] for j=1:size(jump,2))+RTs[i,p])
             #@constraint(model,RTlqn[i,p]==sum(P2[i,j]*RTm[p,j] for j=1:size(jump,2))+RTs[i,p])
-            @constraint(model,ERT_abs[i,p]>=(RTlqn[i,p]-RTm[p,i])/RTm[p,i])
-            @constraint(model,ERT_abs[i,p]>=(-RTlqn[i,p]+RTm[p,i])/RTm[p,i])
+            @constraint(model,ERT_abs[i,p]>=(RTlqn[i,p]-RTm[p,i]))
+            @constraint(model,ERT_abs[i,p]>=(-RTlqn[i,p]+RTm[p,i]))
         end
 end
 
 
 #@objective(model,Min, sum(E_abs2[i,p] for i=1:size(E_abs2,1) for p=1:size(E_abs2,2))+sum(E_abs[i,p] for i=1:size(E_abs,1) for p=1:size(E_abs,2))+sum(ERT_abs[i,p] for i=1:size(ERT_abs,1) for p=1:size(E_abs,2)))
-@objective(model,Min, sum(MU)+sum(E_abs[i,p] for i=1:size(E_abs,1) for p=1:size(E_abs,2))+sum(ERT_abs[i,p] for i=1:size(ERT_abs,1) for p=1:size(E_abs,2)))
+@objective(model,Min, sum(E_abs[i,p] for i=1:size(E_abs,1) for p=1:size(E_abs,2))+sum(ERT_abs[i,p] for i=1:size(ERT_abs,1) for p=1:size(E_abs,2)))
 #@objective(model,Min, ETmax+ERTmax)
 JuMP.optimize!(model)
 

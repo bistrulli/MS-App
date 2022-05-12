@@ -486,8 +486,8 @@ if __name__ == "__main__":
         N=30
         K=30
         
-        #W=[3,4,8,12,16,20,24,28,32,36,40,44,48,52,56,60]
-        W=[7,8,9,15,20,25,30,35,40,45,50,60,65,70,80]
+        W=[3,4,8,12,16,20,24,28,30,40,50,60,70,80,100,120,140,180]
+        #W=[7,8,9,15,20,25,30,35,40,45,50,60,65,70,80]
         #W=np.random.randint(low=4,high=200,size=[20]) 
         rtExp=np.zeros([len(W),3])
         tExp=np.zeros([len(W),3])
@@ -499,7 +499,7 @@ if __name__ == "__main__":
             
             #NC.append([np.inf,np.random.randint(low=1,high=13),np.random.randint(low=1,high=13)])
             
-            NC.append([np.inf,4,9])
+            NC.append([np.inf,13,15])
             
             sys = jvm_sys("../", isCpu)
             

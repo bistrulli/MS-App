@@ -12,7 +12,7 @@
 % stem(sort(Tl(Idx,2)))
 % legend(["TClient_m","TClient_p"])
 
-load("/Users/emilio/git/MS-App/execution/data/3tier_learn7.mat");
+load("/Users/emilio/git/MS-App/execution/data/3tier_learn5.mat");
 load("./fromJulia.mat")
 
 CIdx=sum(sum(RTm,2)~=0);
