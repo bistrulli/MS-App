@@ -56,7 +56,7 @@ class batchMinSim():
                 relE=absE/RT[0]
                 print(RT[1][0]/10**9,RT[1][1]/10**9)
                 print(RT[0]/10**9,relE*100,absE/10**9)
-                if(relE<0.01):
+                if(relE<0.005):
                     rtConverged=True
                     
                 Res["RT"]={"Avg":RT[0]/10**9,"CI":absE/10**9}
@@ -68,7 +68,7 @@ class batchMinSim():
                 relE=absE/T[0]
                 print(T[1][0],T[1][1])
                 print(T[0],relE*100,absE)
-                if(relE<0.01):
+                if(relE<0.005):
                     tConverged=True
                 
                 Res["T"]={"Avg":T[0],"CI":absE}
@@ -486,7 +486,7 @@ if __name__ == "__main__":
         N=30
         K=30
         
-        W=[3,4,8,12,16,20,24,28,30,40,50,60,70,80,100,120,140,180]
+        W=[35,40,50,60,70,80,100,120,140,180,200,220,240,250,260]
         #W=[7,8,9,15,20,25,30,35,40,45,50,60,65,70,80]
         #W=np.random.randint(low=4,high=200,size=[20]) 
         rtExp=np.zeros([len(W),3])
@@ -540,7 +540,7 @@ if __name__ == "__main__":
             sys.stopClient()
             sys.stopSystem()
             
-            savemat("./data/3tier_wi2.mat", {"RTm":rtExp,"rtCI":rtCI,"Tm":tExp,"tCI":tCI,"Cli":W,"NC":NC})
+            savemat("./data/3tier_learnHD.mat", {"RTm":rtExp,"rtCI":rtCI,"Tm":tExp,"tCI":tCI,"Cli":W,"NC":NC})
         
         
             
