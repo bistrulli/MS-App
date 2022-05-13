@@ -1,6 +1,6 @@
 using SCIP,AmplNLWriter,Couenne_jll,Printf,Ipopt,MadNLP,Plots,MadNLPMumps,JuMP,MAT,ProgressBars,ParameterJuMP,Statistics
 
-DATA = matread("../execution/data/3tier_all4.mat")
+DATA = matread("../execution/data/3tier_learnHD.mat")
 
 nzIdz=sum(DATA["RTm"],dims=2).!=0
 
@@ -24,7 +24,7 @@ model = Model(Ipopt.Optimizer)
 #model = Model(() -> AmplNLWriter.Optimizer(Couenne_jll.amplexe))
 #model = Model(SCIP.Optimizer)
 # set_optimizer_attribute(model, "linear_solver", "pardiso")
-#set_optimizer_attribute(model, "max_iter", 20000)
+set_optimizer_attribute(model, "max_iter", 20000)
 # set_optimizer_attribute(model, "derivative_test", "first-order")
 # set_optimizer_attribute(model, "check_derivatives_for_naninf", "yes")
 
@@ -81,7 +81,7 @@ register(model, :min_, 1, f, autodiff=true) #∇f)
 
 for idx=1:size(MU,1)
         set_start_value(MU[idx],mmu[idx])
-        @constraint(model,MU[idx]>=mmu[idx])
+        #@constraint(model,MU[idx]>=mmu[idx])
 end
 
 Xu=RTm.*Tm;
