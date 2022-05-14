@@ -499,7 +499,7 @@ if __name__ == "__main__":
             
             #NC.append([np.inf,np.random.randint(low=1,high=13),np.random.randint(low=1,high=13)])
             
-            NC.append([np.inf,1,1])
+            NC.append([np.inf,10,15])
             
             sys = jvm_sys("../", isCpu)
             
@@ -509,7 +509,7 @@ if __name__ == "__main__":
         
             isConverged=False
             
-            sys.startSys(affinity=np.array([[2,2+NC[-1][1]-1],[5,5+NC[-1][2]-1]]))
+            sys.startSys(affinity=np.array([[2,11],[13,27]]))
             sys.startClient(W[w])
             
             #g = Client("localhost:11211")
