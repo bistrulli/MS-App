@@ -1,0 +1,4 @@
+function [RT]=solveRT2(P,RTL)
+
+RT()=P*RT+RTL;
+end

@@ -12,7 +12,8 @@
 % stem(sort(Tl(Idx,2)))
 % legend(["TClient_m","TClient_p"])
 
-load("/Users/emilio/git/MS-App/execution/data/3tier_learn6.mat");
+clear
+load("/Users/emilio/git/MS-App/execution/data/3tier_learnHD2.mat");
 load("./fromJulia.mat")
 
 CIdx=sum(sum(RTm,2)~=0);
@@ -34,9 +35,9 @@ CIdx=sum(sum(RTm,2)~=0);
 %  0  0   0
 %     ];
 % 
-% MU=[2.8310356130274985
-%  9.953156595757855
-%  6.730606274746325];
+% MU=[1/0.3,
+%  1/0.10,
+%  1/0.15];
 
 
 RTl=zeros(CIdx,size(RTm,2));
@@ -47,12 +48,13 @@ for i=1:CIdx
     
     %   RTl(i,:)=Kpi(2,:);
     %     RTl(i,1)=sum(RTl(i,:));
-    RTl(i,:)=solveRT(P2,Kpi(2,:));
+    RTl(i,:)=solveRT2(P2,Kpi(2,:)');
     
     Tl(i,:)=Kpi(4,:);
 end
 
 for cmp=1:size(RTm,2)
+    disp(cmp)
     figure
     hold on
     box on

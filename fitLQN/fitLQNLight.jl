@@ -1,6 +1,6 @@
 using SCIP,AmplNLWriter,Couenne_jll,Printf,Ipopt,MadNLP,Plots,MadNLPMumps,JuMP,MAT,ProgressBars,ParameterJuMP,Statistics
 
-DATA = matread("../execution/data/3tier_learnHD.mat")
+DATA = matread("../execution/data/3tier_learnHD2.mat")
 
 nzIdz=sum(DATA["RTm"],dims=2).!=0
 
@@ -23,12 +23,13 @@ end
 model = Model(Ipopt.Optimizer)
 #model = Model(() -> AmplNLWriter.Optimizer(Couenne_jll.amplexe))
 #model = Model(SCIP.Optimizer)
-# set_optimizer_attribute(model, "linear_solver", "pardiso")
+set_optimizer_attribute(model, "linear_solver", "pardiso")
 set_optimizer_attribute(model, "max_iter", 20000)
 # set_optimizer_attribute(model, "derivative_test", "first-order")
 # set_optimizer_attribute(model, "check_derivatives_for_naninf", "yes")
 
-#set_optimizer_attribute(model, "tol", 10^-10)
+set_optimizer_attribute(model, "tol", 10^-12)
+set_optimizer_attribute(model, "acceptable_tol", 10^-12)
 #set_optimizer_attribute(model, "print_level", 0)
 
 #      X0_E,X1_E,X2_E
@@ -54,7 +55,9 @@ f(x::T) where {T<:Real} = -(-x+((-x)^2+10^-10)^(1.0/2))/2.0
 # end
 register(model, :min_, 1, f, autodiff=true) #∇f)
 
- mmu=1 ./minimum(RTm,dims=1)
+mmu=1 ./minimum(RTm,dims=1)
+
+#mmu=[1/0.3019,1/0.1053,1/0.1546]
 
 @variable(model,T[i=1:size(jump,1),j=1:npoints]>=0)
 @variable(model,RTlqn[i=1:size(jump,2),p=1:npoints]>=0) #cerco di far conservare anche il response time Steady, state
@@ -75,7 +78,7 @@ register(model, :min_, 1, f, autodiff=true) #∇f)
 @constraint(model,[p=1:npoints],X[:,p].<=(RTm[p,:].*Tm[p,:]))
 #@constraint(model,[i=1:size(P2,1)],P[i,i]==0)
 #@constraint(model,P[1,1]==0)
-#@constraint(model,MU[1]==3.2755)
+@constraint(model,MU[1]==1/0.3)
 
 #@constraint(model,MU.==[1/0.3019,1/0.1053,1/0.1546])
 
