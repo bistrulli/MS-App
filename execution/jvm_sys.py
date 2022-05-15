@@ -487,7 +487,7 @@ if __name__ == "__main__":
         K=30
         
         #W=[35,40,50,60,70,80,100,120,140,180,200,220,240,250,260]
-        W=[8,9,10,13,15,18,20,25,28,30,35,40,50,60,80,100]
+        W=[15,18,20,25,28,30,35,40,50,60,80,100]
         #W=np.random.randint(low=4,high=200,size=[20]) 
         rtExp=np.zeros([len(W),3])
         tExp=np.zeros([len(W),3])
@@ -499,7 +499,7 @@ if __name__ == "__main__":
             
             #NC.append([np.inf,np.random.randint(low=1,high=13),np.random.randint(low=1,high=13)])
             
-            NC.append([np.inf,10,15])
+            NC.append([np.inf,10,15])#adesso li devo specificare manualmente  
             
             sys = jvm_sys("../", isCpu)
             
@@ -540,7 +540,7 @@ if __name__ == "__main__":
             sys.stopClient()
             sys.stopSystem()
             
-            savemat("./data/3tier_learnHDVC.mat", {"RTm":rtExp,"rtCI":rtCI,"Tm":tExp,"tCI":tCI,"Cli":W,"NC":NC})
+            savemat("./data/3tier_learnHDVC2.mat", {"RTm":rtExp,"rtCI":rtCI,"Tm":tExp,"tCI":tCI,"Cli":W,"NC":NC})
         
         
             
