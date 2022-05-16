@@ -16,7 +16,7 @@ P = model.initRoutingMatrix;
 P{cclass} = Pn;
 model.link(P);
 %% Block 4: solution
-solver = SolverFluid(model,'stiff',true);
+solver = SolverFluid(model,'stiff',true,'iter_tol',10^-8);
 %solver = SolverMVA(model);
 %solver = SolverCTMC(model,'force',true);
 %solver = SolverSSA(model,'samples',1e5);

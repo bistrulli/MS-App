@@ -83,7 +83,7 @@ mmu=1 ./minimum(RTm,dims=1)
 #@constraint(model,MU.==[1/0.3019,1/0.1053,1/0.1546])
 
 for idx=1:size(MU,1)
-        set_start_value(MU[idx],mmu[idx])
+        #set_start_value(MU[idx],mmu[idx])
         #@constraint(model,MU[idx]>=mmu[idx])
 end
 
