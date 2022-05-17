@@ -13,7 +13,7 @@
 % legend(["TClient_m","TClient_p"])
 
 clear
-load("/Users/emilio/git/MS-App/execution/data/3tier_learnHDVCALL.mat");
+load("/Users/emilio/git/MS-App/execution/data/3tier_learnHDVC3.mat");
 load("./fromJulia.mat")
 
 CIdx=sum(sum(RTm,2)~=0);
@@ -61,7 +61,7 @@ for cmp=1:size(RTm,2)
     grid on
     stem(RTm(1:CIdx,cmp),"linewidth",1.1,'LineStyle','none')
     stem(RTl(:,cmp),"-.","linewidth",1.3,'LineStyle','none')
-    stem(RTlqn(cmp,1:CIdx)',"--","linewidth",1.3,'LineStyle','none')
+    %stem(RTlqn(cmp,1:CIdx)',"--","linewidth",1.3,'LineStyle','none')
     legend(["RT_m","RT_p"])
 end
 
@@ -69,9 +69,9 @@ figure
 hold on
 box on
 grid on
-%plot(Tm(1:CIdx,:),"linewidth",1.1)
+plot(Tm(1:CIdx,:),"linewidth",1.1)
 plot(Tl(:,:),"-.","linewidth",1.3)
-plot(Cli(1:CIdx),sum(T([1,2,3],1:CIdx)),"--","linewidth",1.3)
+%plot(Cli(1:CIdx),sum(T([1,2,3],1:CIdx)),"--","linewidth",1.3)
 legend(["T_m","T_p"])
 
 figure

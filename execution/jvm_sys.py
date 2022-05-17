@@ -487,7 +487,7 @@ if __name__ == "__main__":
         K=30
         
         #W=[35,40,50,60,70,80,100,120,140,180,200,220,240,250,260]
-        W=[110,120,130,140]
+        W=[15,18,20,25,28,30,35,40,50,60,80,100,110,120]
         #W=np.random.randint(low=4,high=200,size=[20]) 
         rtExp=np.zeros([len(W),3])
         tExp=np.zeros([len(W),3])
@@ -499,7 +499,7 @@ if __name__ == "__main__":
             
             #NC.append([np.inf,np.random.randint(low=1,high=13),np.random.randint(low=1,high=13)])
             
-            NC.append([np.inf,10,15])#adesso li devo specificare manualmente  
+            NC.append([np.inf,15,10])#adesso li devo specificare manualmente  
             
             sys = jvm_sys("../", isCpu)
             
@@ -509,7 +509,7 @@ if __name__ == "__main__":
         
             isConverged=False
             
-            sys.startSys(affinity=np.array([[2,11],[13,27]]))
+            sys.startSys(affinity=np.array([[2,16],[18,27]]))
             sys.startClient(W[w])
             
             #g = Client("localhost:11211")
@@ -540,7 +540,7 @@ if __name__ == "__main__":
             sys.stopClient()
             sys.stopSystem()
             
-            savemat("./data/3tier_learnHDVC3.mat", {"RTm":rtExp,"rtCI":rtCI,"Tm":tExp,"tCI":tCI,"Cli":W,"NC":NC})
+            savemat("./data/3tier_learnHDVCWI.mat", {"RTm":rtExp,"rtCI":rtCI,"Tm":tExp,"tCI":tCI,"Cli":W,"NC":NC})
         
         
             
