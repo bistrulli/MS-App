@@ -1,6 +1,6 @@
-using SCIP,AmplNLWriter,Couenne_jll,Printf,Ipopt,MadNLP,Plots,MadNLPMumps,JuMP,MAT,ProgressBars,ParameterJuMP,Statistics
+using NLopt,AmplNLWriter,Couenne_jll,Printf,Ipopt,MadNLP,Plots,MadNLPMumps,JuMP,MAT,ProgressBars,ParameterJuMP,Statistics
 
-DATA = matread("../execution/data/3tier_learnHDVCALL2.mat")
+DATA = matread("../execution/data/sim/linedata.mat")
 
 nzIdz=sum(DATA["RTm"],dims=2).!=0
 
@@ -23,13 +23,13 @@ end
 model = Model(Ipopt.Optimizer)
 #model = Model(() -> AmplNLWriter.Optimizer(Couenne_jll.amplexe))
 #model = Model(SCIP.Optimizer)
-set_optimizer_attribute(model, "linear_solver", "pardiso")
-set_optimizer_attribute(model, "max_iter", 20000)
+#set_optimizer_attribute(model, "linear_solver", "pardiso")
+#set_optimizer_attribute(model, "max_iter", 20000)
 # set_optimizer_attribute(model, "derivative_test", "first-order")
 # set_optimizer_attribute(model, "check_derivatives_for_naninf", "yes")
 
-set_optimizer_attribute(model, "tol", 10^-12)
-set_optimizer_attribute(model, "acceptable_tol", 10^-12)
+#set_optimizer_attribute(model, "tol", 10^-12)
+#set_optimizer_attribute(model, "acceptable_tol", 10^-12)
 #set_optimizer_attribute(model, "print_level", 0)
 
 #      X0_E,X1_E,X2_E
@@ -78,13 +78,13 @@ mmu=1 ./minimum(RTm,dims=1)
 @constraint(model,[p=1:npoints],X[:,p].<=(RTm[p,:].*Tm[p,:]))
 #@constraint(model,[i=1:size(P2,1)],P[i,i]==0)
 #@constraint(model,P[1,1]==0)
-#@constraint(model,MU[1]==1/0.3)
+@constraint(model,MU[1]==1)
 
 #@constraint(model,MU.==[1/0.3019,1/0.1053,1/0.1546])
 
 for idx=1:size(MU,1)
         set_start_value(MU[idx],mmu[idx])
-        @constraint(model,MU[idx]>=mmu[idx])
+        #@constraint(model,MU[idx]>=mmu[idx])
 end
 
 Xu=RTm.*Tm;
@@ -140,7 +140,7 @@ end
 
 
 #@objective(model,Min, sum(E_abs2[i,p] for i=1:size(E_abs2,1) for p=1:size(E_abs2,2))+sum(E_abs[i,p] for i=1:size(E_abs,1) for p=1:size(E_abs,2))+sum(ERT_abs[i,p] for i=1:size(ERT_abs,1) for p=1:size(E_abs,2)))
-@objective(model,Min, sum(E_abs2)+sum(E_abs[i,p] for i=1:size(E_abs,1) for p=1:size(E_abs,2))+sum(ERT_abs[i,p] for i=1:size(ERT_abs,1) for p=1:size(E_abs,2)))
+@NLobjective(model,Min, sum(E_abs2[i,p] for i=1:size(E_abs2,1) for p=1:size(E_abs2,2))+sum(E_abs[i,p] for i=1:size(E_abs,1) for p=1:size(E_abs,2))+sum(ERT_abs[i,p] for i=1:size(ERT_abs,1) for p=1:size(E_abs,2)))
 #@objective(model,Min, ETmax+ERTmax)
 JuMP.optimize!(model)
 

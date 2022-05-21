@@ -54,7 +54,6 @@ for i=1:CIdx
 end
 
 for cmp=1:size(RTm,2)
-    disp(cmp)
     figure
     hold on
     box on
@@ -65,25 +64,31 @@ for cmp=1:size(RTm,2)
     legend(["RT_m","RT_p"])
 end
 
-figure
-hold on
-box on
-grid on
-plot(Tm(1:CIdx,:),"linewidth",1.1)
-plot(Tl(:,:),"-.","linewidth",1.3)
-%plot(Cli(1:CIdx),sum(T([1,2,3],1:CIdx)),"--","linewidth",1.3)
-legend(["T_m","T_p"])
+
+for cmp=1:size(Tm,2)
+    figure
+    hold on
+    box on
+    grid on
+    stem(Tm(1:CIdx,cmp),"linewidth",1.1,'LineStyle','none')
+    stem(Tl(:,cmp),"-.","linewidth",1.3,'LineStyle','none')
+    %stem(RTlqn(cmp,1:CIdx)',"--","linewidth",1.3,'LineStyle','none')
+    legend(["T_m","T_p"])
+end
 
 figure
-boxplot(abs(RTm(1:CIdx,:)-RTl)*100./RTm(1:CIdx,:))
+boxplot(abs(RTm(1:CIdx,:)-RTl)*100./RTm(1:CIdx,:),'Labels',{'Tier1','Tier2','Tier3'})
 title("Relative Prediction Error (Response Time)")
 box on
 grid on
+ylabel("(%)")
 
 figure
-boxplot(abs(Tm(1:CIdx,:)-Tl)*100./Tm(1:CIdx,:))
+boxplot(abs(Tm(1:CIdx,:)-Tl)*100./Tm(1:CIdx,:),'Labels',{'Tier1','Tier2','Tier3'})
 %boxplot(abs(Tm(1:CIdx,1)-sum(T([1,2,3],:))')*100./Tm(1:CIdx,:))
 title("Relative Prediction Error (Throughput)")
 box on
 grid on
+ylabel("(%)")
+
 
