@@ -540,7 +540,7 @@ if __name__ == "__main__":
             sys.stopClient()
             sys.stopSystem()
             
-            savemat("./data/3tier_learnHDVCWI2.mat", {"RTm":rtExp,"rtCI":rtCI,"Tm":tExp,"tCI":tCI,"Cli":W,"NC":NC})
+            savemat("./data/3tier_learnAsynch.mat", {"RTm":rtExp,"rtCI":rtCI,"Tm":tExp,"tCI":tCI,"Cli":W,"NC":NC})
         
         
             
