@@ -48,7 +48,7 @@ public class Tier1HTTPHandler extends TierHttpHandler {
 		
 		HttpResponse<String> resp = null;
 		try {
-			//this.measureEgress();
+			this.measureEgress();
 			//resp = Unirest.get(URI.create("http://" + Tier1HTTPHandler.getTier2Host() + ":3001/?id="+reqParams.get("id")+ "&entry=e2" + "&snd=" + this.getName()).toString()).header("Connection", "close").asString();
 			
 			CompletableFuture<HttpResponse<String>> future = Unirest.get(URI.create("http://" + Tier1HTTPHandler.getTier2Host() + ":3001/?id="+reqParams.get("id")+ "&entry=e2" + "&snd=" + this.getName()).toString())
@@ -57,7 +57,7 @@ public class Tier1HTTPHandler extends TierHttpHandler {
 					        int code = response.getStatus();
 					        String body = response.getBody();
 					    });
-			//this.measureReturn();
+			this.measureReturn();
 		} catch (UnirestException e) {
 			e.printStackTrace();
 		}
