@@ -221,7 +221,8 @@ class jvm_sys(system_interface):
             
             subprocess.Popen([javaCmd,
                              "-Xmx30G", "-Xms30G",
-                             #"-Djava.compiler=NONE", "-Xint"
+                             "-Djava.compiler=NONE", 
+                             #"-Xint,"
                              "-jar",'%sMS-Tier2/target/MS-Tier2-0.0.1-jar-with-dependencies.jar' % (self.sysRootPath),
                              '--cpuEmu', "%d" % (cpuEmu), '--jedisHost', 'localhost',
                              "--aff","%d-%d"%(aff[1,0],aff[1,1])])
@@ -230,7 +231,8 @@ class jvm_sys(system_interface):
             
             subprocess.Popen([javaCmd,
                              "-Xmx30G", "-Xms30G",
-                             #"-Djava.compiler=NONE", "-Xint" 
+                             "-Djava.compiler=NONE",
+                             #"-Xint," 
                              "-jar",'%sMS-Tier1/target/MS-Tier1-0.0.1-jar-with-dependencies.jar' % (self.sysRootPath),
                              '--cpuEmu', "%d" % (cpuEmu), '--jedisHost', 'localhost',
                              "--tier2Host", "127.0.0.1",
