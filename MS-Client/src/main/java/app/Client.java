@@ -49,7 +49,7 @@ public class Client implements Runnable {
 			while (!this.dying) {
 				
 				//diciamo che in questo modo rappresenta l'id della sessione
-				//this.clietId = UUID.randomUUID();
+				this.clietId = UUID.randomUUID();
 				// in questo modo tratto sia i client che i server in modo uniforme per il monitoraggio del tempo di risposta
 				this.task.getEnqueueTime().put(this.clietId.toString(), System.nanoTime());
 
