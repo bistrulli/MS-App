@@ -56,7 +56,7 @@ class batchMinSim():
                 relE=absE/RT[0]
                 print(RT[1][0]/10**9,RT[1][1]/10**9)
                 print(RT[0]/10**9,relE*100,absE/10**9)
-                if(relE<0.005):
+                if(relE<0.01):
                     rtConverged=True
                     
                 Res["RT"]={"Avg":RT[0]/10**9,"CI":absE/10**9}
@@ -68,7 +68,7 @@ class batchMinSim():
                 relE=absE/T[0]
                 print(T[1][0],T[1][1])
                 print(T[0],relE*100,absE)
-                if(relE<0.005):
+                if(relE<0.01):
                     tConverged=True
                 
                 Res["T"]={"Avg":T[0],"CI":absE}
@@ -483,11 +483,11 @@ if __name__ == "__main__":
         isCpu = True
         g = None
         sys = None
-        N=30
-        K=30
+        N=40
+        K=40
         
         #W=[35,40,50,60,70,80,100,120,140,180,200,220,240,250,260]
-        W=[1,2,5,8,12,15,18,22,25,28,31,34,37]
+        W=[5,8,12,15,18,22,25,28,31,34,37]
         #W=np.random.randint(low=4,high=200,size=[20]) 
         rtExp=np.zeros([len(W),3])
         tExp=np.zeros([len(W),3])
