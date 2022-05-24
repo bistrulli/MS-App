@@ -48,8 +48,6 @@ public class Client implements Runnable {
 
 			while (!this.dying) {
 				
-				//diciamo che in questo modo rappresenta l'id della sessione
-				this.clietId = UUID.randomUUID();
 				// in questo modo tratto sia i client che i server in modo uniforme per il monitoraggio del tempo di risposta
 				this.task.getEnqueueTime().put(this.clietId.toString(), System.nanoTime());
 
@@ -76,6 +74,8 @@ public class Client implements Runnable {
 				this.task.getRts().addSample(new rtSample(this.task.getEnqueueTime().get(this.clietId.toString()), 
 						System.nanoTime()));
 				
+				//diciamo che in questo modo rappresenta l'id della sessione
+				this.clietId = UUID.randomUUID();
 			}
 //			thinking = this.task.getState().get("think").decrementAndGet();
 			SimpleTask.getLogger().debug(String.format(" user %s stopped", this.clietId));
