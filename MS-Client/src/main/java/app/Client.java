@@ -30,6 +30,7 @@ public class Client implements Runnable {
 	private static String tier1Host = null;
 	public static AtomicBoolean isStarted = new AtomicBoolean(false);
 	private ThreadLocalRandom rnd = null;
+	private static AtomicLong idCounter = new AtomicLong();
 
 	public Client(SimpleTask task, Long ttime) {
 		this.setThinkTime(ttime);
@@ -47,6 +48,9 @@ public class Client implements Runnable {
 			
 
 			while (!this.dying) {
+				
+				//this.clietId = UUID.randomUUID();
+				this.clietId = Client.createID();
 				
 				// in questo modo tratto sia i client che i server in modo uniforme per il monitoraggio del tempo di risposta
 				this.task.getEnqueueTime().put(this.clietId.toString(), System.nanoTime());
@@ -75,7 +79,6 @@ public class Client implements Runnable {
 						System.nanoTime()));
 				
 				//diciamo che in questo modo rappresenta l'id della sessione
-				this.clietId = UUID.randomUUID();
 			}
 //			thinking = this.task.getState().get("think").decrementAndGet();
 			SimpleTask.getLogger().debug(String.format(" user %s stopped", this.clietId));
@@ -120,6 +123,10 @@ public class Client implements Runnable {
 	public double expDist() {
 		double y0 = this.rnd.nextDouble();
 		return -(Long.valueOf(this.getThinkTime()).doubleValue()) * Math.log(1 - y0);
+	}
+	public static String createID()
+	{
+	    return String.valueOf(idCounter.getAndIncrement());
 	}
 
 }
