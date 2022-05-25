@@ -149,7 +149,8 @@ class jvm_sys(system_interface):
                          "-jar",'%sMS-Client/target/MS-Client-0.0.1-jar-with-dependencies.jar' % (self.sysRootPath),
                          '--initPop', '%d' % (pop), '--jedisHost', 'localhost', '--tier1Host', '127.0.0.1',
                          '--queues', '[\"think\", \"e1_bl\", \"e1_ex\", \"t1_hw\",\"e2_bl\", \"e2_ex\", \"t2_hw\"]'],stdout=f, stderr=f1)
-        
+        f.close()
+        f1.close()
         self.waitClient()
         
         self.client = self.findProcessIdByName("MS-Client-0.0.1")[0]
