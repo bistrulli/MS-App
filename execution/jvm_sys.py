@@ -189,6 +189,11 @@ class jvm_sys(system_interface):
         self.waitMemCached()
         self.sys.append(self.findProcessIdByName("memcached")[0])
         
+        t1Outf = open("t1Out.log", "w+")
+        t1Errf = open("t1Err.log", "w+")
+        t2Outf = open("t2Out.log", "w+")
+        t2Errf = open("t2Err.log", "w+")
+        
         if(not self.isCpu):
             
             subprocess.Popen([javaCmd,
@@ -197,7 +202,7 @@ class jvm_sys(system_interface):
                              # "-XX:+UnlockExperimentalVMOptions","-XX:+UseEpsilonGC",
                              #"-Djava.compiler=NONE", 
                              "-jar",'%sMS-Tier2/target/MS-Tier2-0.0.1-jar-with-dependencies.jar' % (self.sysRootPath),
-                             '--cpuEmu', "%d" % (cpuEmu), '--jedisHost', 'localhost'])
+                             '--cpuEmu', "%d" % (cpuEmu), '--jedisHost', 'localhost'],stdout=t2Outf, stderr=t2Errf)
             
             self.waitTier2()
             self.sys.append(self.findProcessIdByName("MS-Tier2-0.0.1")[0])
@@ -209,7 +214,7 @@ class jvm_sys(system_interface):
                              #"-Djava.compiler=NONE", 
                              "-jar",'%sMS-Tier1/target/MS-Tier1-0.0.1-jar-with-dependencies.jar' % (self.sysRootPath),
                              '--cpuEmu', "%d" % (cpuEmu), '--jedisHost', 'localhost',
-                             "--tier2Host", "127.0.0.1"])
+                             "--tier2Host", "127.0.0.1"],stdout=t1Outf, stderr=t1Errf)
             
             self.waitTier1()
             self.sys.append(self.findProcessIdByName("MS-Tier1-0.0.1")[0])
@@ -228,7 +233,7 @@ class jvm_sys(system_interface):
                              #"-Djava.compiler=NONE", "-Xint"
                              "-jar",'%sMS-Tier2/target/MS-Tier2-0.0.1-jar-with-dependencies.jar' % (self.sysRootPath),
                              '--cpuEmu', "%d" % (cpuEmu), '--jedisHost', 'localhost',
-                             "--aff","%d-%d"%(aff[1,0],aff[1,1])])
+                             "--aff","%d-%d"%(aff[1,0],aff[1,1])],stdout=t2Outf, stderr=t2Errf)
             self.waitTier2()
             self.sys.append(self.findProcessIdByName("MS-Tier2-0.0.1")[0])
             
@@ -238,7 +243,7 @@ class jvm_sys(system_interface):
                              "-jar",'%sMS-Tier1/target/MS-Tier1-0.0.1-jar-with-dependencies.jar' % (self.sysRootPath),
                              '--cpuEmu', "%d" % (cpuEmu), '--jedisHost', 'localhost',
                              "--tier2Host", "127.0.0.1",
-                             "--aff","%d-%d"%(aff[0,0],aff[0,1])])
+                             "--aff","%d-%d"%(aff[0,0],aff[0,1])],stdout=t1Outf, stderr=t1Errf)
             self.waitTier1()
             self.sys.append(self.findProcessIdByName("MS-Tier1-0.0.1")[0])
     
