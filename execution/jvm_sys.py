@@ -141,11 +141,14 @@ class jvm_sys(system_interface):
         r.set("started", "0")
         r.close()
         
+        f = open("clietOut.log", "w+")
+        f1 = open("clietErr.log", "w+")
+        
         subprocess.Popen([javaCmd, "-Xmx30G", "-Xms30G",
                          #"-Djava.compiler=NONE", 
                          "-jar",'%sMS-Client/target/MS-Client-0.0.1-jar-with-dependencies.jar' % (self.sysRootPath),
                          '--initPop', '%d' % (pop), '--jedisHost', 'localhost', '--tier1Host', '127.0.0.1',
-                         '--queues', '[\"think\", \"e1_bl\", \"e1_ex\", \"t1_hw\",\"e2_bl\", \"e2_ex\", \"t2_hw\"]'])
+                         '--queues', '[\"think\", \"e1_bl\", \"e1_ex\", \"t1_hw\",\"e2_bl\", \"e2_ex\", \"t2_hw\"]'],stdout=f, stderr=f1)
         
         self.waitClient()
         
