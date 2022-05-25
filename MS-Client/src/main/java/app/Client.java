@@ -23,7 +23,7 @@ public class Client implements Runnable {
 	private SimpleTask task = null;
 	private ExponentialDistribution dist = null;
 	private long thinkTime = -1;
-	private UUID clietId = null;
+	private String clietId = null;
 	public static AtomicInteger time = new AtomicInteger(0);
 	private MemcachedClient memcachedClient = null;
 	private static AtomicInteger toKill = new AtomicInteger(0);
@@ -36,7 +36,7 @@ public class Client implements Runnable {
 	public Client(SimpleTask task, Long ttime) {
 		this.setThinkTime(ttime);
 		this.task = task;
-		this.clietId = UUID.randomUUID();
+		//this.clietId = UUID.randomUUID();
 		this.dying = false;
 		this.rnd = ThreadLocalRandom.current();
 	}
