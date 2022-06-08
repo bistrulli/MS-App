@@ -17,7 +17,8 @@ import jni.GetThreadID;
 import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
 import kong.unirest.UnirestException;
-import java.util.concurrent.CompletableFuture;  
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;  
 
 @SuppressWarnings("restriction")
 public class Tier1HTTPHandler extends TierHttpHandler {
@@ -47,11 +48,12 @@ public class Tier1HTTPHandler extends TierHttpHandler {
 		
 		
 		HttpResponse<String> resp = null;
+		CompletableFuture<HttpResponse<String>> future=null;
 		try {
 			this.measureEgress();
 			//resp = Unirest.get(URI.create("http://" + Tier1HTTPHandler.getTier2Host() + ":3001/?id="+reqParams.get("id")+ "&entry=e2" + "&snd=" + this.getName()).toString()).header("Connection", "close").asString();
 			
-			CompletableFuture<HttpResponse<String>> future = Unirest.get(URI.create("http://" + Tier1HTTPHandler.getTier2Host() + ":3001/?id="+reqParams.get("id")+ "&entry=e2" + "&snd=" + this.getName()).toString())
+			future = Unirest.get(URI.create("http://" + Tier1HTTPHandler.getTier2Host() + ":3001/?id="+reqParams.get("id")+ "&entry=e2" + "&snd=" + this.getName()).toString())
 					  .header("Connection", "close")
 					  .asStringAsync(response -> {
 					        int code = response.getStatus();
@@ -74,7 +76,16 @@ public class Tier1HTTPHandler extends TierHttpHandler {
 			}
 			this.doWorkSleep(executing);
 		}
-
+		
+		
+		//per garantire lo steady state aspetto il termine delle richieste annidate
+		try {
+			future.get();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			e.printStackTrace();
+		}
 		this.measureEgress();
 
 		req.getResponseHeaders().set("Content-Type", "text/html; charset=UTF-8");
