@@ -1,6 +1,6 @@
 using NLopt,AmplNLWriter,Couenne_jll,Printf,Ipopt,MadNLP,Plots,MadNLPMumps,JuMP,MAT,ProgressBars,ParameterJuMP,Statistics
 
-DATA = matread("../execution/data/sim/linedata.mat")
+DATA = matread("../execution/data/3tier_fj.mat")
 
 nzIdz=sum(DATA["RTm"],dims=2).!=0
 
@@ -78,7 +78,7 @@ mmu=1 ./minimum(RTm,dims=1)
 @constraint(model,[p=1:npoints],X[:,p].<=(RTm[p,:].*Tm[p,:]))
 #@constraint(model,[i=1:size(P2,1)],P[i,i]==0)
 #@constraint(model,P[1,1]==0)
-@constraint(model,MU[1]==1)
+#@constraint(model,MU[1]==1)
 
 #@constraint(model,MU.==[1/0.3019,1/0.1053,1/0.1546])
 
@@ -106,10 +106,10 @@ exp2=@NLexpression(model,(-(-(X[3,p]-NC[p,3])+((-(X[3,p]-NC[p,3]))^2+10^-10)^(1.
 @NLconstraint(model,T[8,p]==P[3,2]*MU[3]*exp2)
 @NLconstraint(model,T[9,p]==P[3,3]*MU[3]*exp2)
 
-@constraint(model,[k=1:size(E_abs2,1)],E_abs2[k,p]>=(jump'*T[:,p])[k])
-@constraint(model,[k=1:size(E_abs2,1)],E_abs2[k,p]>=-(jump'*T[:,p])[k])
+# @constraint(model,[k=1:size(E_abs2,1)],E_abs2[k,p]>=(jump'*T[:,p])[k])
+# @constraint(model,[k=1:size(E_abs2,1)],E_abs2[k,p]>=-(jump'*T[:,p])[k])
 
-#@constraint(model,jump'*T[:,p].==0)
+@constraint(model,jump'*T[:,p].==0)
 
 @NLconstraint(model,sum(T[i,p] for i in [1,2,3])*RTs[1,p]==X[1,p])
 @NLconstraint(model,sum(T[i,p] for i in [4,5,6])*RTs[2,p]==X[2,p])
@@ -140,7 +140,7 @@ end
 
 
 #@objective(model,Min, sum(E_abs2[i,p] for i=1:size(E_abs2,1) for p=1:size(E_abs2,2))+sum(E_abs[i,p] for i=1:size(E_abs,1) for p=1:size(E_abs,2))+sum(ERT_abs[i,p] for i=1:size(ERT_abs,1) for p=1:size(E_abs,2)))
-@NLobjective(model,Min, sum(E_abs2[i,p] for i=1:size(E_abs2,1) for p=1:size(E_abs2,2))+sum(E_abs[i,p] for i=1:size(E_abs,1) for p=1:size(E_abs,2))+sum(ERT_abs[i,p] for i=1:size(ERT_abs,1) for p=1:size(E_abs,2)))
+@NLobjective(model,Min, sum(E_abs[i,p] for i=1:size(E_abs,1) for p=1:size(E_abs,2))+sum(ERT_abs[i,p] for i=1:size(ERT_abs,1) for p=1:size(E_abs,2)))
 #@objective(model,Min, ETmax+ERTmax)
 JuMP.optimize!(model)
 

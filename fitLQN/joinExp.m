@@ -1,7 +1,7 @@
 clear
 
-e1=load("/Users/emilio/git/MS-App/execution/data/3tier_learnHDVCALL2.mat");
-e2=load("/Users/emilio/git/MS-App/execution/data/3tier_learnHDVCWI.mat");
+e1=load("/Users/emilio/git/MS-App/execution/data/3tier_learnAsynch2.mat");
+e2=load("/Users/emilio/git/MS-App/execution/data/3tier_learnAsynch3.mat");
 
 e1CIdx=sum(sum(e1.RTm,2)~=0);
 e2CIdx=sum(sum(e2.RTm,2)~=0);
@@ -16,4 +16,4 @@ NC=cat(1,e1.NC([1:e1CIdx],:),e2.NC([1:e2CIdx],:));
 
 clear e1 e2
 
-save("/Users/emilio/git/MS-App/execution/data/3tier_learnHDVCALL3.mat")
+save("/Users/emilio/git/MS-App/execution/data/3tier_fj.mat")
