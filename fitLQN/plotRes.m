@@ -13,7 +13,7 @@
 % legend(["TClient_m","TClient_p"])
 
 clear
-load("/Users/emilio/git/MS-App/execution/data/3tier_fj.mat");
+load("/Users/emilio/git/MS-App/execution/data/3tier_fj2.mat");
 load("./fromJulia.mat")
 
 CIdx=sum(sum(RTm,2)~=0);
@@ -24,20 +24,20 @@ CIdx=sum(sum(RTm,2)~=0);
 % P2=[0.0         0.99774
 %  0.00253123  0.0];
 % MU=[3.2865425244638855,9.781509324351875];
-
+% 
 % P=[   0  1   0
-%  0  0   1
-%  1  0   0
-%     ];
-% % 
-% P2=[    0  1   0
-%  0  0   1
-%  0  0   0
+%       0  0   1
+%       1  0   0
 %     ];
 % 
-% MU=[1/0.3,
-%  1/0.10,
-%  1/0.15];
+% P2=[    0  1   0
+%         0  0   0.75
+%         0  0   0
+%     ];
+% 
+% MU=[1/0.3060,...
+%  1/0.10,...
+%  1/0.1513];
 
 
 RTl=zeros(CIdx,size(RTm,2));

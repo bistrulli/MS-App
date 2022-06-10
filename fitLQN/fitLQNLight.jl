@@ -1,6 +1,6 @@
 using NLopt,AmplNLWriter,Couenne_jll,Printf,Ipopt,MadNLP,Plots,MadNLPMumps,JuMP,MAT,ProgressBars,ParameterJuMP,Statistics
 
-DATA = matread("../execution/data/3tier_fj.mat")
+DATA = matread("../execution/data/3tier_fj2.mat")
 
 nzIdz=sum(DATA["RTm"],dims=2).!=0
 

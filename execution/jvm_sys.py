@@ -496,7 +496,7 @@ if __name__ == "__main__":
         K=40
         
         #W=[35,40,50,60,70,80,100,120,140,180,200,220,240,250,260]
-        W=[8,12,15,18,22,25,28,31,34,37,40,45,50,55,60,65,70]
+        W=[1,2,3,4,5,6,7]
         #W=np.random.randint(low=4,high=200,size=[20]) 
         rtExp=np.zeros([len(W),3])
         tExp=np.zeros([len(W),3])
@@ -549,7 +549,7 @@ if __name__ == "__main__":
             sys.stopClient()
             sys.stopSystem()
             
-            savemat("./data/3tier_learnAsynch4.mat", {"RTm":rtExp,"rtCI":rtCI,"Tm":tExp,"tCI":tCI,"Cli":W,"NC":NC})
+            savemat("./data/3tier_learnAsynch4_1.mat", {"RTm":rtExp,"rtCI":rtCI,"Tm":tExp,"tCI":tCI,"Cli":W,"NC":NC})
         
         
             
