@@ -78,7 +78,7 @@ mmu=1 ./minimum(RTm,dims=1)
 @constraint(model,[p=1:npoints],X[:,p].<=(RTm[p,:].*Tm[p,:]))
 #@constraint(model,[i=1:size(P2,1)],P[i,i]==0)
 #@constraint(model,P[1,1]==0)
-#@constraint(model,MU[1]==1)
+#@constraint(model,MU[1]==1/0.3)
 
 #@constraint(model,MU.==[1/0.3019,1/0.1053,1/0.1546])
 
@@ -131,7 +131,7 @@ for p=1:npoints
         end)
 
         for i=1:size(jump,2)
-            @NLconstraint(model,RTlqn[i,p]==sum(P[i,j]*P2[i,j]*RTlqn[j,p] for j=1:size(jump,2))+RTs[i,p])
+            @NLconstraint(model,RTlqn[i,p]==sum(P2[i,j]*RTlqn[j,p] for j=1:size(jump,2))+RTs[i,p])
             #@constraint(model,RTlqn[i,p]==sum(P2[i,j]*RTm[p,j] for j=1:size(jump,2))+RTs[i,p])
             @constraint(model,ERT_abs[i,p]>=(RTlqn[i,p]-RTm[p,i])/RTm[p,i])
             @constraint(model,ERT_abs[i,p]>=(-RTlqn[i,p]+RTm[p,i])/RTm[p,i])
@@ -149,6 +149,6 @@ matwrite("fromJulia.mat", Dict(
                "T" => value.(T),
                "MU" => value.(MU),
                "P" => value.(P),
-               "P2" => value.(P.*P2),
+               "P2" => value.(P2),
                "NCopt" => value.(NC)
        );)

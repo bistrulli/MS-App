@@ -45,7 +45,7 @@ public class Client implements Runnable {
 		try {
 
 			Client.isStarted.set(true);
-			//int thinking = this.task.getState().get("think").incrementAndGet();
+			int thinking = this.task.getState().get("think").incrementAndGet();
 			
 
 			while (!this.dying) {
@@ -57,18 +57,18 @@ public class Client implements Runnable {
 				this.task.getEnqueueTime().put(this.clietId.toString(), System.nanoTime());
 
 				//SimpleTask.getLogger().debug(String.format("%s thinking", thinking));
-//				TimeUnit.MILLISECONDS.sleep(Double.valueOf(this.dist.sample()).longValue());
-				TimeUnit.MILLISECONDS.sleep(Double.valueOf(this.expDist()).longValue());
+				TimeUnit.MILLISECONDS.sleep(Double.valueOf(this.dist.sample()).longValue());
+				//TimeUnit.MILLISECONDS.sleep(Double.valueOf(this.expDist()).longValue());
 
 //				SimpleTask.getLogger().debug(String.format("%s sending", this.task.getName()));
-//				this.task.getState().get("think").decrementAndGet();
+				this.task.getState().get("think").decrementAndGet();
 				
 				
 				Unirest.get(URI.create("http://" + Client.getTier1Host() + ":3000/?id=" + this.clietId.toString()
 						+ "&entry=e1" + "&snd=think").toString()).header("Connection", "close").asString();
 				
 
-//				thinking = this.task.getState().get("think").incrementAndGet();
+				thinking = this.task.getState().get("think").incrementAndGet();
 
 //				if (Client.getToKill().get() > 0) {
 //					Client.toKill.decrementAndGet();

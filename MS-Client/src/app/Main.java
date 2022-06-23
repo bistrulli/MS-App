@@ -69,12 +69,6 @@ public class Main {
 			for (String e : Main.systemQueues) {
 				if (e.equals("think")) {
 					memcachedClient.set("think", 3600, String.valueOf(0)).get();
-				} else {
-					if (e.endsWith("_sw") || e.endsWith("_hw")) {
-						memcachedClient.set(e, 3600, "100").get();
-					} else {
-						memcachedClient.set(e, 3600, "0").get();
-					}
 				}
 			}
 		} catch (InterruptedException | ExecutionException e1) {
@@ -87,9 +81,9 @@ public class Main {
 		HashMap<String, Class> clientEntries = new HashMap<String, Class>();
 		HashMap<String, Long> clientEntries_stimes = new HashMap<String, Long>();
 		clientEntries.put("think", Client.class);
-		clientEntries_stimes.put("think", 300l);
+		clientEntries_stimes.put("think", 1000l);
 		final SimpleTask client = new SimpleTask(clientEntries, clientEntries_stimes, Main.initPop, "Client",
-				Main.jedisHost, null,100l);
+				Main.jedisHost, 10l,100l);
 		Client.setTier1Host(Main.tier1Host);
 		return new SimpleTask[] { client };
 	}

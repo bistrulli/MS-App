@@ -66,7 +66,7 @@ public class Main {
 		t2Entries.put("e2", Tier2HTTPHandler.class);
 		t2Entries_stimes.put("e2", 150l);
 		final SimpleTask t2 = new SimpleTask("localhost", 3001, t2Entries, t2Entries_stimes, 1, Main.isEmu, "t2",
-				Main.jedisHost, null, 100l, null, Main.cgv2);
+				Main.jedisHost, 100l, 100l, 10l, Main.cgv2);
 		t2.setHwCore(1f);
 		if (Main.affinity != null)
 			t2.setAffinity(Main.affinity);// non uso il construttore ma il metodo set

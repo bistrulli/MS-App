@@ -144,7 +144,7 @@ class jvm_sys(system_interface):
         f = open("clietOut.log", "w+")
         f1 = open("clietErr.log", "w+")
         
-        subprocess.Popen([javaCmd, "-Xmx10G", "-Xms10G",
+        subprocess.Popen([javaCmd, "-Xmx30G", "-Xms30G",
                          #"-Djava.compiler=NONE", 
                          "-jar",'%sMS-Client/target/MS-Client-0.0.1-jar-with-dependencies.jar' % (self.sysRootPath),
                          '--initPop', '%d' % (pop), '--jedisHost', 'localhost', '--tier1Host', '127.0.0.1',
@@ -333,7 +333,7 @@ class jvm_sys(system_interface):
         atpt = 0
         base_client = Client(("127.0.0.1", 11211))
         while(atpt < limit and (base_client.get("started") == None or base_client.get("started").decode('UTF-8') == "0")):
-           time.sleep(0.2)
+           time.sleep(0.01)
            atpt += 1
         
     def waitMemCached(self):
@@ -412,7 +412,7 @@ class jvm_sys(system_interface):
         print(output, time.time() - start)
     
     def getStateTcp(self):
-        tiers = [3333, 13000]
+        tiers = [3333, 13000,13001]
         sys_state = {}
         
         for tier in tiers: 
@@ -496,61 +496,104 @@ if __name__ == "__main__":
         K=40
         
         #W=[35,40,50,60,70,80,100,120,140,180,200,220,240,250,260]
-        W=[1,2,3,4,5,6,7]
+        W=[1]
         #W=np.random.randint(low=4,high=200,size=[20]) 
         rtExp=np.zeros([len(W),3])
         tExp=np.zeros([len(W),3])
         rtCI=np.zeros([len(W),3])
         tCI=np.zeros([len(W),3])
-        NC=[]
+        NC=[-1,5,6]
+        NT=[-1,30,30]
         
-        for w in range(len(W)) :
-            
-            #NC.append([np.inf,np.random.randint(low=1,high=13),np.random.randint(low=1,high=13)])
-            
-            NC.append([np.inf,6,12])#adesso li devo specificare manualmente  
-            
+        stateQ=np.zeros([700,5,1]);
+        
+        
+        for k in range(stateQ.shape[2]):
+            print("###%d###"%(k))
             sys = jvm_sys("../", isCpu)
+            sys.startSys(affinity=np.array([[2,6],[8,13]]))
             
-            ClientBM=batchMinSim(N=N, K=K, logFile="Client_rtlog.log")
-            T1BM=batchMinSim(N=N, K=K, logFile="t1_rtlog.log")
-            T2BM=batchMinSim(N=N, K=K, logFile="t2_rtlog.log")
-        
-            isConverged=False
+            g=Client('localhost')
             
-            sys.startSys(affinity=np.array([[2,7],[9,20]]))
-            sys.startClient(W[w])
+            sys.startClient(60)
+            dt=0.2;
             
-            #g = Client("localhost:11211")
-            #g.set("t1_hw", "%f" %(5))
+            g.set("t1_sw",NT[1])
+            g.set("t1_hw",NC[1])
+            g.set("t2_sw",NT[2])
+            g.set("t2_hw",NC[2])
             
-            X = []
-            resC=None
-            resT1=None
-            resT2=None
-            while(not isConverged):
+            for i in range(stateQ.shape[0]):
+                print(i)
+                state=sys.getStateTcp()
+                stateQ[i,0]=state["think"];
+                stateQ[i,1]=state["e1_bl"];
+                stateQ[i,2]=state["e1_ex"];
+                stateQ[i,3]=state["e2_bl"];
+                stateQ[i,4]=state["e2_ex"];
+                time.sleep(dt)
                 
-                
-                resC=ClientBM.batchMeans()
-                resT1=T1BM.batchMeans()
-                resT2=T2BM.batchMeans()
-                
-                isConverged=resC[0] and resT1[0] and resT2[0]
-                
-                time.sleep(0.5)
-            
-            #solvo i dati di questa iterazione
-            rtExp[w,:]=[resC[1]["RT"]["Avg"],resT1[1]["RT"]["Avg"],resT2[1]["RT"]["Avg"]]
-            rtCI[w,:]=[resC[1]["RT"]["CI"],resT1[1]["RT"]["CI"],resT2[1]["RT"]["CI"]]
-            
-            tExp[w,:]=[resC[1]["T"]["Avg"],resT1[1]["T"]["Avg"],resT2[1]["T"]["Avg"]]
-            tCI[w,:]=[resC[1]["T"]["CI"],resT1[1]["T"]["CI"],resT2[1]["T"]["CI"]]
             
             sys.stopClient()
             sys.stopSystem()
-            
-            savemat("./data/3tier_learnAsynch4_1.mat", {"RTm":rtExp,"rtCI":rtCI,"Tm":tExp,"tCI":tCI,"Cli":W,"NC":NC})
         
+        
+        # T=np.linspace(0,stateQ.shape[0]*dt,stateQ.shape[0])
+        # plt.figure()
+        # plt.step(T,np.mean(stateQ,axis=2)[:,0])   
+        # plt.savefig("queue.pdf")
+        
+        savemat("queue_0_3.mat", {"dt":dt,"Queue":stateQ,"NC":NC,"NT":NT})
+        
+        
+        # for w in range(len(W)) :
+        #
+        #     #NC.append([np.inf,np.random.randint(low=1,high=13),np.random.randint(low=1,high=13)])
+        #
+        #     NC.append([np.inf,6,12])#adesso li devo specificare manualmente  
+        #
+        #     sys = jvm_sys("../", isCpu)
+        #
+        #     ClientBM=batchMinSim(N=N, K=K, logFile="Client_rtlog.log")
+        #     T1BM=batchMinSim(N=N, K=K, logFile="t1_rtlog.log")
+        #     T2BM=batchMinSim(N=N, K=K, logFile="t2_rtlog.log")
+        #
+        #     isConverged=False
+        #
+        #     sys.startSys(affinity=np.array([[2,7],[9,20]]))
+        #     sys.startClient(W[w])
+        #
+        #     #g = Client("localhost:11211")
+        #     #g.set("t1_hw", "%f" %(5))
+        #
+        #     X = []
+        #     resC=None
+        #     resT1=None
+        #     resT2=None
+        #     while(not isConverged):
+        #
+        #
+        #         resC=ClientBM.batchMeans()
+        #         resT1=T1BM.batchMeans()
+        #         resT2=T2BM.batchMeans()
+        #
+        #         isConverged=resC[0] and resT1[0] and resT2[0]
+        #
+        #         time.sleep(0.5)
+        #
+        #     #solvo i dati di questa iterazione
+        #     rtExp[w,:]=[resC[1]["RT"]["Avg"],resT1[1]["RT"]["Avg"],resT2[1]["RT"]["Avg"]]
+        #     rtCI[w,:]=[resC[1]["RT"]["CI"],resT1[1]["RT"]["CI"],resT2[1]["RT"]["CI"]]
+        #
+        #     tExp[w,:]=[resC[1]["T"]["Avg"],resT1[1]["T"]["Avg"],resT2[1]["T"]["Avg"]]
+        #     tCI[w,:]=[resC[1]["T"]["CI"],resT1[1]["T"]["CI"],resT2[1]["T"]["CI"]]
+        #
+        #     sys.stopClient()
+        #     sys.stopSystem()
+        #
+        #     savemat("./data/3tier_learnAsynch4_1.mat", {"RTm":rtExp,"rtCI":rtCI,"Tm":tExp,"tCI":tCI,"Cli":W,"NC":NC})
+        #
+
         
             
     except Exception as ex:
