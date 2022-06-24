@@ -505,7 +505,7 @@ if __name__ == "__main__":
         NC=[-1,5,6]
         NT=[-1,30,30]
         
-        stateQ=np.zeros([300,5,30]);
+        stateQ=np.zeros([300,5,60]);
         
         
         for k in range(stateQ.shape[2]):
