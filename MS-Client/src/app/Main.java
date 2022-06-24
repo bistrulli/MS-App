@@ -66,8 +66,8 @@ public class Main {
 			e.printStackTrace();
 		}
 		try {
-
 			memcachedClient.set("think", 3600, String.valueOf(Main.initPop)).get();
+			System.out.println(memcachedClient.get("think"))
 		} catch (InterruptedException | ExecutionException e1) {
 			e1.printStackTrace();
 		}
