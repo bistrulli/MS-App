@@ -68,7 +68,7 @@ public class Main {
 		try {
 			for (String e : Main.systemQueues) {
 				if (e.equals("think")) {
-					memcachedClient.set("think", 3600, String.valueOf(0)).get();
+					memcachedClient.set("think", 3600, String.valueOf(Main.initPop)).get();
 				}
 			}
 		} catch (InterruptedException | ExecutionException e1) {

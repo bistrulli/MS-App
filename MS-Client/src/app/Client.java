@@ -45,7 +45,7 @@ public class Client implements Runnable {
 		try {
 
 			Client.isStarted.set(true);
-			int thinking = this.task.getState().get("think").incrementAndGet();
+			//int thinking = this.task.getState().get("think").incrementAndGet();
 			
 
 			while (!this.dying) {
