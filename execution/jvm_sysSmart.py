@@ -505,7 +505,7 @@ if __name__ == "__main__":
         NC=[-1,5,6]
         NT=[-1,30,30]
         
-        stateQ=np.zeros([500,5,100]);
+        stateQ=np.zeros([500,5,10]);
         
         
         for k in range(stateQ.shape[2]):
@@ -526,11 +526,11 @@ if __name__ == "__main__":
             for i in range(stateQ.shape[0]):
                 print(i)
                 state=sys.getStateTcp()
-                stateQ[i,0]=state["think"];
-                stateQ[i,1]=state["e1_bl"];
-                stateQ[i,2]=state["e1_ex"];
-                stateQ[i,3]=state["e2_bl"];
-                stateQ[i,4]=state["e2_ex"];
+                stateQ[i,0,k]=state["think"];
+                stateQ[i,1,k]=state["e1_bl"];
+                stateQ[i,2,k]=state["e1_ex"];
+                stateQ[i,3,k]=state["e2_bl"];
+                stateQ[i,4,k]=state["e2_ex"];
                 time.sleep(dt)
                 
             
