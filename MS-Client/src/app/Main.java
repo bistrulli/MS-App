@@ -28,7 +28,7 @@ public class Main {
 	public static void main(String[] args) {
 
 		System.setProperty("net.spy.log.LoggerImpl", "net.spy.memcached.compat.log.SLF4JLogger");
-		Unirest.config().concurrency(2000,2000);
+		Unirest.config().concurrency(2000, 2000);
 		Unirest.config().socketTimeout(0);
 		Unirest.config().connectTimeout(0);
 
@@ -36,10 +36,10 @@ public class Main {
 		final SimpleTask[] Sys = Main.genSystem();
 		Main.resetState(Sys[0]);
 		Sys[0].start();
-		
+
 		MemcachedClient memcachedClient = null;
 		while (true) {
-			if (Client.isStarted.get()) { 
+			if (Client.isStarted.get()) {
 				break;
 			} else {
 				System.out.println("waiting for client");
@@ -66,11 +66,8 @@ public class Main {
 			e.printStackTrace();
 		}
 		try {
-			for (String e : Main.systemQueues) {
-				if (e.equals("think")) {
-					memcachedClient.set("think", 3600, String.valueOf(Main.initPop)).get();
-				}
-			}
+
+			memcachedClient.set("think", 3600, String.valueOf(Main.initPop)).get();
 		} catch (InterruptedException | ExecutionException e1) {
 			e1.printStackTrace();
 		}
@@ -83,7 +80,7 @@ public class Main {
 		clientEntries.put("think", Client.class);
 		clientEntries_stimes.put("think", 1000l);
 		final SimpleTask client = new SimpleTask(clientEntries, clientEntries_stimes, Main.initPop, "Client",
-				Main.jedisHost, 10l,100l);
+				Main.jedisHost, 10l, 100l);
 		Client.setTier1Host(Main.tier1Host);
 		return new SimpleTask[] { client };
 	}
