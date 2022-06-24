@@ -68,7 +68,7 @@ public class Client implements Runnable {
 						+ "&entry=e1" + "&snd=think").toString()).header("Connection", "close").asString();
 				
 
-				thinking = this.task.getState().get("think").incrementAndGet();
+				this.task.getState().get("think").incrementAndGet();
 
 //				if (Client.getToKill().get() > 0) {
 //					Client.toKill.decrementAndGet();
