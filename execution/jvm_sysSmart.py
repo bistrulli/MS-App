@@ -516,7 +516,7 @@ if __name__ == "__main__":
             g=Client('localhost')
             
             sys.startClient(60)
-            dt=0.2;
+            dt=0.5;
             
             g.set("t1_sw",NT[1])
             g.set("t1_hw",NC[1])
@@ -525,13 +525,16 @@ if __name__ == "__main__":
             
             for i in range(stateQ.shape[0]):
                 print(i)
+                start=time.time()
                 state=sys.getStateTcp()
                 stateQ[i,0,k]=state["think"];
                 stateQ[i,1,k]=state["e1_bl"];
                 stateQ[i,2,k]=state["e1_ex"];
                 stateQ[i,3,k]=state["e2_bl"];
                 stateQ[i,4,k]=state["e2_ex"];
-                time.sleep(dt)
+                time.sleep(dt-(time.time()-start))
+            
+            savemat("queue_0_3.mat", {"dt":dt,"Queue":stateQ,"NC":NC,"NT":NT})
                 
             
             sys.stopClient()
@@ -542,8 +545,6 @@ if __name__ == "__main__":
         # plt.figure()
         # plt.step(T,np.mean(stateQ,axis=2)[:,0])   
         # plt.savefig("queue.pdf")
-        
-        savemat("queue_0_3.mat", {"dt":dt,"Queue":stateQ,"NC":NC,"NT":NT})
         
         
         # for w in range(len(W)) :
